@@ -1,9 +1,8 @@
 --- 
-title: "YOUR TITLE HERE"
-author: "YOUR NAME HERE"
+title: "DataLab StudCons"
+author: "Anders Tolver, Bo Markussen, Helle Sørensen, Hjalte Søberg Mikkelsen"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
-# Down the rabbit-hole
 
