@@ -1,0 +1,299 @@
+# Binary Regression {#binreg}
+
+
+```{r b0}
+# To download the tools needed for model validation run the line of code below
+#devtools::install_github("kkholst/gof")
+```
+
+
+```{r b1,warning=FALSE,message=FALSE}
+library(tidyverse)
+library(emmeans)
+library(vtable)
+library(dobson)
+library(gof)
+library(mlbench)
+library(lattice)
+```
+
+
+
+
+## When to use this model?
+
+Binary logistic regression is used when the response variable is binary, for example the response can be in the form `yes` or `no` and `dead` or `alive`. The explanatory variables can still be continuous or discrete, and there is no limit on the number of explanatory variables.
+
+
+In the examples in this chapter we will be using the `beetle` data from the package `dobson`. Here our explanatory variable is doseage of carbon-disulfide (CS_2) and the response is `dead` or `alive`.
+
+## Description of the Model
+
+The binary response is coded as 1 and 0, instead of for example `yes` or `no`. This means we can't just use normal linear regression, as then the response could be outside the range of 0 and 1. This is why we need to make us of the logit link function, and the method is called logistic regression. 
+
+In normal linear regression we assume the the response `y` is in the form $y=b_0+b_1x_1+...+b_nx_n$, where the x's are the explanatory variables and $b_0,...,b_n$ are the parameters we estimate through linear regression. Now in binary linear regression we assume the response `y` is in the form $y=\frac{\exp(b_0+b_1x_1+...+b_nx_n)}{1+\exp(b_0+b_1x_1+...+b_nx_n)}$, so we still have the linear combination of the explanatory variables and the response is now between 0 and 1. 
+
+
+The model then outputs the probability of seeing `yes` or `no` given the explanatory variables. 
+
+The coefficients we get from doing a logistic regression correspond to what we call "log odds". If we are in a model with one explanatory variable and a response variable, the response is assumed to take the form $y=\frac{\exp(b_0+b_1x_1)}{1+\exp(b_0+b_1x_1)}$. Here $b_0+b_1x_1$ corresponds to the log odds which means $\exp(b_0+b_1x_1)$ is the odds ratio of $y=1$, and can take values in teh range $[0,\infty)$. This means that $\exp(b_0+b_1x_1)=\frac{P}{1-P}$ where $P$ is the probability of success. The odds ratio of 1 is when the probability of success is equal to the probability of failure. The odds ratio of 2 is when the probability of success is twice the probability of failure. The odds ratio of 0.5 is when the probability of failure is twice the probability of success.
+
+
+
+## similarities to the chi-squared test
+
+The chi-squared test can also be used for binary data, and it has its advantages and disadvantages mainly: Its simple. It is a very simple and easy test, but the result is also simple. If we just want to know if our observations are significant, the chi-squared test is great´, but it doesn't really say more than that. In our example with the beetles, we could be interested in knowing if carbon-disulfide can kill the beetles and the different dosages. Here our null-hypothesis would be that it doesnt kill the beetles, and we would probably find through the chi-squared test that we reject this null-hypothesis for most/all dosages.
+Binary logistic regression can instead find the probability of a beetle to survive given a specific dosage.
+
+
+
+## Example 1: Simple example but bad model fit
+
+### Organizing data 
+
+We load the `beetle` data from the package `dobson`, and change the names of the varibles to ones that makes more sense:
+```{r b2}
+#Loading the data
+data(beetle)
+
+#Changing names of the variables
+names(beetle) <- c("dose", "number", "dead")
+
+#Making new varible
+beetle$proportion <- beetle$dead/beetle$number
+```
+
+
+Now we make a variable table together with a simple linear regression, to get an overview of the data:
+```{r b3}
+Description <- c("Dosage of CS2 in log10(mg/l)","Number of beetles","Number of beetles that died", "Propotion of beetles that is dead")
+Use <- c("Explanatory variable", "Response variable", "Response variable", "Response variable")
+cbind(vt(beetle, out = "return"),data.frame(Description,Use))
+```
+
+
+
+```{r b4}
+ggplot(beetle,aes(x=dose,y=dead/number)) + geom_point() + geom_smooth(method="lm") +
+  xlab("log10(CS2 mg/l)") + ylab("Proportion of dead beetles") +
+  theme_light()
+```
+Note: If we trust this linear regression blindly we could be inclined to think that given a dosage of 2 log10(CS2 mg/L) we would get a proportion of dead beetles which exceeds 1. This of course doesn't make sense and is why we need another method than just simple linear regression.
+
+
+
+
+### Fitting Model
+
+We fit the model using the `glm()` function, and as a response variable we use the table:
+```{r b5}
+cbind(beetle$dead,beetle$number-beetle$dead)
+```
+Where the first column is the number of beetles that died and the second is number of beetles still alive, given the dosage of carbon-disulfide.
+
+
+```{r b6}
+# Make probit regression
+m1 <- glm(cbind(dead,number-dead)~dose,data=beetle,family=binomial(link="logit")) #cbind(dead,number-dead) makes table consisting of 2 columns and 8 rows, with the first column representing number of beetles that died and the second column is how many beetles are alive
+
+summary(m1)
+```
+In the summary we can see that the dosage of CS2 i very significant. From the summary we also get the estimates of the coefficients in the logit function, i.e. our model estimates the logit function to be:
+$y=\frac{\exp(-60.717+34.27*dose)}{1+\exp(-60.717+34.27*dose)}$, where y is the probability of the beetles dying.
+
+We can then plot the estimated logit function together with the known data:
+```{r b7}
+preds <- data.frame(dose = seq(min(beetle$dose), max(beetle$dose), length.out = 500))
+preds$pred <- predict(m1, preds, type = "response")
+preds$upper <- predict(m1, preds, type = "response", se.fit = TRUE)$fit + 1.96 * predict(m1, preds, type = "response", se.fit = TRUE)$se.fit
+preds$lower <- predict(m1, preds, type = "response", se.fit = TRUE)$fit - 1.96 * predict(m1, preds, type = "response", se.fit = TRUE)$se.fit
+
+ggplot(beetle, aes(x = dose, y = proportion)) +
+  geom_point(alpha = 0.5) +
+  geom_line(data = preds, aes(x = dose, y = pred), color = "red", inherit.aes = FALSE) +
+  geom_ribbon(data = preds, aes(x = dose, ymin = lower, ymax = upper), alpha = 0.2, inherit.aes = FALSE) +
+  ggtitle("")
+```
+
+
+
+
+
+
+
+
+### Model validering via gof-pakken. Gerne via kkholst på github.
+
+The binary logistic regression model only holds if the following assumptions hold:
+
+* The explanatory variables are independent
+* The observations are independent
+* The explanatory variables are linearly related to the log odds of the dependent variable
+
+In our example with the beetle data, we only have one explanatory variable so assumption 1 is trivially fulfilled.
+
+To check assumption two we can do a residual plot just like in normal linear regression, although here it is not as usefull. In normal linear regression we check if there is any patterns to the residuals, i.e. if they are randomly distributed, but in binary regression the residuals are expected to have a distinct pattern (this can be seen in the second exmaple further down). Therefore a residual plot in this case is mostly used to spot outliers.
+```{r b8}
+plot(m1, which = 1)
+```
+This residual plot is impossible to interpret as there is too few data points.
+
+
+A better way to check assumption two is to simulate the cumulative sum of the residual process, and hold those simulations up against the observed cumulative sum:
+```{r b9}
+plot(cumres(m1))
+```
+Here the null-hypothesis is that the model is correct, which means that the test suggests that the model is false as the p-value is 0.009-0.011.
+
+
+
+### Hypothesis test
+
+To do an hypothesis for the binary logistic regression, we use the function `drop1()` on our fitted model:
+
+```{r b10}
+drop1(m1, test="Chisq")
+```
+Here we see our explanatory variable `dose` is statistically significant and we can therefore reject the null, i.e. this test suggests that dosage of CS2 do impact whether the beetles live or die, under the assumption that the model is true.
+
+
+
+
+### Parameter estimates with emmeans.
+
+If we are interested in the estimated mean probability of beetles dying given the mean dosage of carbon-disulfide, we can use the `emmeans()` function (Note: This is more interesting when we have multiple explanatory variables)
+```{r b11}
+m <- emmeans(m1, ~ dose, test = "F")
+m
+```
+Here we see that given the mean dosage of carbon-disulfide we expect the beetles to die with a probability of 0.744.
+
+
+
+
+
+
+## Example 2: Multiple variables and correct model fit
+
+Now we take a look at another data example containing multiple explanatory variables and a good model fit. The dataset contains characteristics of Pima Indian women who was tested for diabetes.
+
+### Organizing data 
+
+We first load the data
+```{r b12}
+data(PimaIndiansDiabetes2)
+
+newdata <- na.omit(PimaIndiansDiabetes2)
+newdata$age <- as.factor(ifelse(newdata$age<=30,"20-30",ifelse(newdata$age<=40,"31-40",ifelse(newdata$age<=50,"41-50","50+"))))
+
+newdata <- newdata[,c("diabetes","glucose","pressure","triceps","insulin","mass","pedigree","age")]
+```
+
+
+Now we make a variable table, to get an overview of the data:
+```{r b13}
+Description <- c("Diabetic (test for diabetes)","Plasma glucose concentration (glucose tolerance test)", "Diastolic blood pressure (mm Hg)","Triceps skin fold thickness (mm)","2-Hour serum insulin (mu U/ml)","Body mass index","Diabetes pedigree function","Age sorted into buckets")
+Use <- c("Response variable", "Explanatory variable", "Explanatory variable", "Explanatory variable","Explanatory variable", "Explanatory variable", "Explanatory variable", "Explanatory variable")
+cbind(vt(newdata, out = "return"),data.frame(Description,Use))
+```
+
+
+
+Boxplot for each continuous variable to see a potential effect of each explanatory variable on the response variable. 
+```{r b14}
+par(mfrow = c(3,2))
+boxplot(glucose~diabetes, ylab="Glucose", xlab= "Diabetes", col="light blue",data = newdata)
+boxplot(pressure~diabetes, ylab="Pressure", xlab= "Diabetes", col="light blue",data = newdata)
+boxplot(triceps~diabetes, ylab="triceps", xlab= "Diabetes", col="light blue",data = newdata)
+boxplot(insulin~diabetes, ylab="Insulin", xlab= "Diabetes", col="light blue",data = newdata)
+boxplot(mass~diabetes, ylab="Mass", xlab= "Diabetes", col="light blue",data = newdata)
+boxplot(pedigree~diabetes, ylab="Pedigree", xlab= "Diabetes", col="light blue",data = newdata)
+```
+
+Number of diabetics and non-diabetics in each age group
+```{r b15}
+xtabs(~diabetes + age, data = newdata)
+```
+
+
+
+
+### Fitting Model
+
+
+
+Now we fit the model using all the explanatory variables.
+```{r b16}
+m2 <- glm(diabetes~., family = binomial(link="logit"),data = newdata)
+
+summary(m2)
+```
+For every one unit increase in `glucose`, the log odds of being diabetic ‘pos’(versus being diabetic ‘neg’) increases by 0.039.
+Similarly, for one unit increase in `pressure`, the log odds of being diabetic ‘pos’(versus being diabetic ‘neg’) decreases by 0.0045.
+
+
+
+
+
+### Model validering via gof-pakken. Gerne via kkholst på github.
+
+The binary logistic regression model only holds if the following assumptions hold:
+
+* The explanatory variables are independent
+* The observations are independent
+* The explanatory variables are linearly related to the log odds of the dependent variable
+
+To get an idea if the explanatory variables are independent we calculate the Spearman correlation matrix
+```{r b17}
+cp <- cor(data.matrix(newdata[,-1]), method = "spearman")
+ord <- rev(hclust(as.dist(1-abs(cp)))$order)
+colPal <- colorRampPalette(c("blue", "yellow"), space = "rgb")(100)
+
+levelplot(cp[ord, ord],
+          xlab = "",
+          ylab = "",
+          col.regions = colPal,
+          at = seq(-1,1, length.out = 100),
+          colorkey = list(space = "top", labels = list(cex = 1.5)),
+          scales = list(x = list(rot= 45),
+                        y = list(draw = FALSE),
+                        cex = 1.2)
+          )
+```
+Here we see that `insulin` and `glucose` as well as `mass` and `triceps` are heavily correlated, and we could think about removing some of them. This will however not be done here
+
+
+To check assumption 2, we again make a residual plot:
+```{r b18}
+plot(m2, 1)
+```
+Here we can see that the residuals clearly have a pattern, and we can see that there are a couple of outliers, but it is hard to say anything about whether or not the observations are independent.
+
+
+To check this we again simulate the cumulative sum of the residual process:
+```{r b19}
+plot(cumres(m2))
+```
+Here the null-hypothesis is that the model is correct, which means that the test suggests that the model is correct as the p-value is 0.596-0.68. Looking at the p-values for the individual variables it also looks really good except for `mass` and `insulin`.
+
+
+
+### Hypothesis test
+
+To do an hypothesis for the binary logistic regression, we use the function `drop1()` on our fitted model:
+
+```{r b20}
+drop1(m2, test="Chisq")
+```
+Here we see that `glucose`, `mass`, `pedigree` and `age` are statistical significant, while `pressure`, `triceps` and `insulin` are not.
+
+
+
+
+
+
+
+
+
+
+

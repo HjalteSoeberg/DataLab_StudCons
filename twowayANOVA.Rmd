@@ -1,0 +1,303 @@
+# Two-way analysis of variance {#twowayANOVA}
+
+```{r x1,warning=FALSE,message=FALSE}
+library(tidyverse)
+library(emmeans)
+library(vtable)
+```
+
+
+
+## When to use this model?
+
+A two-way ANOVA is used to estimate how the mean of a quantitative variable changes according to the levels of two categorical variables. You can use a two-way ANOVA when you want to know how two independent variables, in combination, affect a dependent variable. In this example we will use two-way anova to see if applying fertilizer to flowers at the florist or/and at the customer effects the lifespan of a rose.
+
+
+
+## Organizing data
+```{r x2}
+df <- read.table("data/3_1_roser.txt", header = TRUE, sep = "", dec = ".", colClasses = c(rep("factor",4),"numeric"))
+print(as_tibble(df))
+``` 
+As this chapter is about two-way-ANOVA we will only look at two categorial variables and a responsvariable. For this data our respons variable is `time` and we choose `florist` and `customer` as our explanatory variables.
+
+```{r x3}
+df = subset(df, select = c("florist","customer","time"))
+print(as_tibble(df))
+```
+
+To understand the data better its a good idea to make a table of variables. Here are two examples: One using standard R and one using the package vtable:
+```{r x4}
+str(df)
+```
+
+```{r x5}
+Description <- c("If fertilizer was applied at florist","If fertilizer was applied at customer","Days before the rose withered")
+Use <- c("Explanatory variable", "Explanatory variable", "Response variable")
+cbind(vt(df, out = "return"),data.frame(Description,Use))
+```
+
+We can see that `florist` and `customer` are both factor variables taking either 0 or 1 as values, where a 1 indicates that fertilizer has been applied and 0 indicates that fertilizer has not been applied. i.e. if `florist` has a value of 1 the fertilizer was applied at the florist. `time` is a numerical variable ranging from 6.9 to 15.2 and indicates how many days the rose survived. 
+
+
+
+## Data exploration
+It is convenient to compute summarizes of the outcome divided by the factors:
+```{r x6}
+sum_customer <- df %>% 
+  group_by(customer) %>% 
+  summarise(
+    n = n(), 
+    mean_time = mean(time), 
+    sd_time = sd(time), 
+    median_time = median(time))
+sum_customer
+```
+
+
+This table suggests that applying fertilizer at the costumers has a possitive effective on the lifespan of the roses.
+
+
+
+```{r x7}
+sum_florist <- df %>% 
+  group_by(florist) %>% 
+  summarise(
+    n = n(), 
+    mean_time = mean(time), 
+    sd_time = sd(time), 
+    median_time = median(time))
+sum_florist
+```
+This table suggests that applying fertilizer at the florist has a possitive effective on the lifespan of the roses.
+
+We can also create a table of the combinations of the categorial variables to see if there is a possible interaction effect:
+```{r x8}
+sum_df <- df %>% 
+  group_by(florist, customer) %>%
+  summarise(
+    count = n(),
+    mean = mean(time, na.rm = TRUE),
+    sd = sd(time, na.rm = TRUE),
+    median = median(time, na.rm = TRUE)
+  )
+sum_df
+```
+This table suggest that applying fertilizer at both the florist and the costumer simultaniously has a large possitive effect on the lifespan of the roses, i.e. it suggests there is an interaction effect.
+
+```{r x9}
+sum_customer %>%
+  ggplot(aes(x = customer, y = mean_time, fill = customer)) + 
+  geom_bar(stat="identity", 
+           position=position_dodge(), width = .65) +
+  geom_errorbar(aes(ymin = mean_time- sd_time, ymax = mean_time+ sd_time), width=.2,
+                 position=position_dodge(.9)) + 
+  labs(title="Barplot of sample means with error bars (+/- SD) for `customer`",
+       x="Fertilizer added at customer", y = "time", fill = "customer") +
+  scale_x_discrete(breaks=c("0","1"), labels=c("No", "Yes")) +
+  scale_fill_discrete(breaks=c("0","1"),labels=c("No", "Yes"))
+```
+
+```{r x10}
+sum_florist %>% 
+  ggplot(aes(x = florist, y = mean_time, fill = florist)) + 
+  geom_bar(stat="identity", 
+           position=position_dodge(), width = .65) +
+  geom_errorbar(aes(ymin = mean_time- sd_time, ymax = mean_time + sd_time), width=.2,
+                 position=position_dodge(.9)) + 
+  labs(title="Barplot of sample means with error bars (+/- SD) for `florist`", x="Fertilizer added at florist", y = "time", fill = "florist") +
+  scale_x_discrete(breaks=c("0","1"), labels=c("No", "Yes")) +
+  scale_fill_discrete(breaks=c("0","1"),labels=c("No", "Yes"))
+```
+
+```{r x11}
+sum_df %>% 
+  ggplot(aes(x = florist, y = mean, fill = customer)) + 
+  geom_bar(stat = "identity", position = "dodge", alpha = 0.5) +
+  geom_errorbar(aes(
+    ymin=mean-sd,
+    ymax=mean+sd),
+    position = position_dodge(0.9),
+    width = 0.25) +
+  labs(
+    title="Barplot of sample means with error bars (+/- SD) for `florist`", 
+    x="Fertilizer added at florist", y = "time")+
+  scale_x_discrete(
+    breaks=c("0","1"),
+    labels=c("No", "Yes")) +
+  scale_fill_discrete(
+    breaks=c("0","1"),
+    labels=c("No", "Yes"))
+```
+
+
+
+A boxplot can be good to see if there is an interaction effect (If applying fertilizer only have an effect if it is done both places)
+```{r x12}
+df %>% 
+  ggplot(
+    aes(x=florist, 
+        y=time, 
+        color = customer)) + 
+  geom_boxplot(
+    outlier.colour="red", 
+    outlier.shape=8,
+    outlier.size=4)+
+  scale_x_discrete(
+    breaks=c("0","1"),
+    labels=c("No", "Yes")) +
+  scale_color_discrete(
+    breaks=c("0","1"),
+    labels=c("No", "Yes"))
+```
+
+Here we can see that applying the fertilizer at the costumer and not the dealer, has a small positive effect, but applying both at the dealer and the costumers seems to have a large positive effect.
+
+
+## Fitting model
+
+```{r x13}
+m1_interaction <- lm(time ~ florist*customer, data = df)
+```
+
+Doing a drop1 test on our models we can see which terms in the model are considered significant, and should be kept in the model
+```{r x14}
+drop1(m1_interaction, test = "F")
+```
+Here we see that florist and customer are significant terms while the interaction between the two is not significant. 
+
+
+```{r x15}
+m1 <- lm(time ~ florist + customer, data = df)
+```
+
+```{r x16}
+drop1(m1, test = "F")
+```
+
+
+
+## Validating the model
+
+### Why do I need to valide the model?
+
+The two-way ANOVA can only be used given these three assumption:
+
+* Independence of observations: Observations within each group are independent
+* Homogeneity of variance: The variation around the mean for each group being compared should be similar among all groups
+* Normal-distributed dependent variable: The depended variable should be normally distributed
+
+All that we extract from the two-way ANOVA model about uncertainty of estimates (later also tests) is only valid if the model assumptions are valid. 
+
+### How do I validate the model assumptions?
+
+The `plot()` function makes it easy to check the latter two assumptions about homoscedasticity and normal-distributed dependent variable. To check if the variation around the mean for each group being compared is similar among all groups we can do the following on the fitted model (here we use the model with an interaction effect):
+
+```{r x17}
+#homogeneity of variance assumption
+plot(m1, 1)
+```
+
+Here the assumption is fulfilled if the red line is horizontal. In this example it is almost perfectly horizontal and we would say that the assumption is fulfilled.
+
+To check if the dependent variable is normally distributed we can make a qq-plot of the residuals:
+```{r x18}
+#normality assumpttion
+plot(m1, 2)
+```
+
+For the assumption to be fulfilled the dots need to follow the dotted line.
+
+
+## Hypothesis test
+To do the two-way-ANOVA we need our fitted model and then do the test using `joint_tests()`.
+
+
+First we will do a two-way anova on the linear model with an interaction effect `time ~ florist + customer + florist:customer`, as our data exploration suggests that there may be one. The null hypothesis for this model are the same two as before plus an additional one: Applying fertilizer at the shop has no effect on the effect of applying fertilizer at the costumer.
+```{r x19}
+joint_tests(m1_interaction)
+```
+From the summary we get a p-value of 0.0995 on the interaction effect, which means we cannot reject the null hypothesis based on our data. 
+
+Now we will do a two-way anova on the linear model `time ~ florist + customer`. The null hypothesis for this model are: There is no significant difference on the lifespan of the roses between applying fertilizer and not applying fertilizer at the florist, and there is no significant difference on the lifespan of the roses between applying fertilizer and not applying fertilizer at costumer.
+```{r x20}
+joint_tests(m1)
+```
+From the summary we can see the p-value for applying fertilizer at the shop is 0.011, which means based on this test we can reject the null-hypothesis, i.e. this test suggest that there is a significant difference on whether you apply or dont apply fertilizer at the florist.
+The same conclusion can be drawn from the second p-value as it is 0.003.
+
+
+
+
+
+
+## Extracting estimates with `emmeans()`
+
+Here we use the function `emmeans()` to calculate the estimated marginal means for all possible values of the factor variables:
+```{r x21}
+m <- emmeans(m1_interaction,  ~ florist*customer, test = "F")
+m
+```
+
+Now we want to compare the estimated means between values of the factor variables. This is called the constrasts:
+```{r x22}
+m %>% pairs(simple = "florist")
+```
+Here we see that the mean for Florist = 0 is not significantly different from the mean for Florist = 1 when Customer = 0, but they are significantly different when customer is 1.
+
+
+
+
+```{r x23}
+m %>% pairs(simple = "customer")
+```
+Here we see that the mean for Customer = 0 is not significantly different from the mean for Customer = 1 when Florist = 0, but they are significantly different when Florist is 1.
+
+
+In can be of interest to take the contrast of the contrasts, to see if the effect of `florist` is different depending on `customer` (i.e. the interaction effect).
+```{r x24}
+m %>% 
+  pairs(simple = "florist") %>% ## Order of florist and customer does not matter
+  pairs(simple = "customer",by = NULL)
+```
+Here we see that that the interaction effect is not significant.
+
+
+
+## Writing article/report
+
+### How to write method section
+In a method section one should clearly state the methods used to produce the results presented in the paper, such that anyone reading the paper can reproduce the result given the same data. Here is an example:
+
+To test whether applying fertilizer to the roses at the florist or the customer, has an effect on their lifespan, we have choosen to do a two-way-ANOVA test. This will also be done on their interaction effect to see if applying fertilizer both places has a bigger effect.
+
+### How to write results section
+Doing the two-way-ANOVA test we find that both `florist` and `customer` are significant, while their interaction is not, meaning, based on the test, that there is a significant difference on whether you apply or don't apply fertilizer at the florist or at the customer, and no significant difference between applying it at both at the same time.
+
+
+## Miscellaneous
+
+### Why to not use ANOVA tables
+
+The classical ANOVA-table only works if the dataset is balanced (there are equal number of observations of each label within a factor). In our case this is true and we can see that `anova()` and `joint_test()` outputs the same p values (except for some rounding):
+```{r x25}
+joint_tests(m1_interaction)
+anova(m1_interaction)
+```
+
+Now i remove the 3 first observations in our dataset and we can see that the two methods output different p-values
+```{r x26}
+m_test <- lm(time ~ florist*customer, data = df[-1:-3,])
+joint_tests(m_test)
+anova(m_test)
+```
+
+Now the order in which our variables are written in the model also changes the results in the `anova()` table while it is the same for `joint_test()`
+```{r x27}
+m_test2 <- lm(time ~ customer*florist, data = df[-1:-3,])
+joint_tests(m_test2)
+anova(m_test2)
+```
+
+
+
