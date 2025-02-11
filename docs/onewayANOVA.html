@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 One-way analysis of variance | A short introduction to common statistical data analysis techniques</title>
+  <meta name="description" content="Chapter 4 One-way analysis of variance | A short introduction to common statistical data analysis techniques" />
+  <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 One-way analysis of variance | A short introduction to common statistical data analysis techniques" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 One-way analysis of variance | A short introduction to common statistical data analysis techniques" />
+  
+  
+  
+
+<meta name="author" content="Data Science Lab, University of Copenhagen" />
+
+
+<meta name="date" content="2025-02-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="model-validation.html"/>
+<link rel="next" href="poisson-regression.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About this document</a></li>
+<li class="chapter" data-level="1" data-path="binreg.html"><a href="binreg.html"><i class="fa fa-check"></i><b>1</b> Binary Regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="binreg.html"><a href="binreg.html#when-to-use-this-model"><i class="fa fa-check"></i><b>1.1</b> When to use this model?</a></li>
+<li class="chapter" data-level="1.2" data-path="binreg.html"><a href="binreg.html#description-of-the-model"><i class="fa fa-check"></i><b>1.2</b> Description of the Model</a></li>
+<li class="chapter" data-level="1.3" data-path="binreg.html"><a href="binreg.html#similarities-to-the-chi-squared-test"><i class="fa fa-check"></i><b>1.3</b> similarities to the chi-squared test</a></li>
+<li class="chapter" data-level="1.4" data-path="binreg.html"><a href="binreg.html#example-1-simple-example-but-bad-model-fit"><i class="fa fa-check"></i><b>1.4</b> Example 1: Simple example but bad model fit</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="binreg.html"><a href="binreg.html#organizing-data"><i class="fa fa-check"></i><b>1.4.1</b> Organizing data</a></li>
+<li class="chapter" data-level="1.4.2" data-path="binreg.html"><a href="binreg.html#fitting-model"><i class="fa fa-check"></i><b>1.4.2</b> Fitting Model</a></li>
+<li class="chapter" data-level="1.4.3" data-path="binreg.html"><a href="binreg.html#model-validering-via-gof-pakken.-gerne-via-kkholst-på-github."><i class="fa fa-check"></i><b>1.4.3</b> Model validering via gof-pakken. Gerne via kkholst på github.</a></li>
+<li class="chapter" data-level="1.4.4" data-path="binreg.html"><a href="binreg.html#hypothesis-test"><i class="fa fa-check"></i><b>1.4.4</b> Hypothesis test</a></li>
+<li class="chapter" data-level="1.4.5" data-path="binreg.html"><a href="binreg.html#parameter-estimates-with-emmeans."><i class="fa fa-check"></i><b>1.4.5</b> Parameter estimates with emmeans.</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="binreg.html"><a href="binreg.html#example-2-multiple-variables-and-correct-model-fit"><i class="fa fa-check"></i><b>1.5</b> Example 2: Multiple variables and correct model fit</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="binreg.html"><a href="binreg.html#organizing-data-1"><i class="fa fa-check"></i><b>1.5.1</b> Organizing data</a></li>
+<li class="chapter" data-level="1.5.2" data-path="binreg.html"><a href="binreg.html#fitting-model-1"><i class="fa fa-check"></i><b>1.5.2</b> Fitting Model</a></li>
+<li class="chapter" data-level="1.5.3" data-path="binreg.html"><a href="binreg.html#model-validering-via-gof-pakken.-gerne-via-kkholst-på-github.-1"><i class="fa fa-check"></i><b>1.5.3</b> Model validering via gof-pakken. Gerne via kkholst på github.</a></li>
+<li class="chapter" data-level="1.5.4" data-path="binreg.html"><a href="binreg.html#hypothesis-test-1"><i class="fa fa-check"></i><b>1.5.4</b> Hypothesis test</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear regression</a></li>
+<li class="chapter" data-level="3" data-path="model-validation.html"><a href="model-validation.html"><i class="fa fa-check"></i><b>3</b> Model Validation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="model-validation.html"><a href="model-validation.html#why-and-how"><i class="fa fa-check"></i><b>3.1</b> Why and How</a></li>
+<li class="chapter" data-level="3.2" data-path="model-validation.html"><a href="model-validation.html#sample-size-of-one"><i class="fa fa-check"></i><b>3.2</b> Sample size of one</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="model-validation.html"><a href="model-validation.html#data-example-1-weight-of-crabs"><i class="fa fa-check"></i><b>3.2.1</b> Data Example 1: Weight of Crabs</a></li>
+<li class="chapter" data-level="3.2.2" data-path="model-validation.html"><a href="model-validation.html#data-example-2-salary-data-from-connecticut---log-transformation"><i class="fa fa-check"></i><b>3.2.2</b> Data Example 2: Salary Data from Connecticut - log transformation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="model-validation.html"><a href="model-validation.html#sample-size-of-two"><i class="fa fa-check"></i><b>3.3</b> Sample size of two</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="model-validation.html"><a href="model-validation.html#simulated-data-example"><i class="fa fa-check"></i><b>3.3.1</b> Simulated data example</a></li>
+<li class="chapter" data-level="3.3.2" data-path="model-validation.html"><a href="model-validation.html#data-example-3-lean-body-mass-and-physical-strength-for-men-and-women"><i class="fa fa-check"></i><b>3.3.2</b> Data Example 3: Lean body mass and physical strength for men and women</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="model-validation.html"><a href="model-validation.html#linear-nomral-models-regression-anova-ancova"><i class="fa fa-check"></i><b>3.4</b> Linear nomral models (regression, ANOVA, ANCOVA)</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="model-validation.html"><a href="model-validation.html#data-example-4-pillbugs-oneway-anova"><i class="fa fa-check"></i><b>3.4.1</b> Data Example 4: pillbugs (oneway ANOVA)</a></li>
+<li class="chapter" data-level="3.4.2" data-path="model-validation.html"><a href="model-validation.html#data-example-5-lean-body-mass-and-physical-strength-for-men-and-women-continued"><i class="fa fa-check"></i><b>3.4.2</b> Data Example 5: Lean body mass and physical strength for men and women (continued)</a></li>
+<li class="chapter" data-level="3.4.3" data-path="model-validation.html"><a href="model-validation.html#data-example-5-birthwt"><i class="fa fa-check"></i><b>3.4.3</b> Data Example 5: birthwt</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="model-validation.html"><a href="model-validation.html#miscellaneous"><i class="fa fa-check"></i><b>3.5</b> Miscellaneous</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="model-validation.html"><a href="model-validation.html#intepretation-of-results-when-transforming"><i class="fa fa-check"></i><b>3.5.1</b> Intepretation of results when transforming</a></li>
+<li class="chapter" data-level="3.5.2" data-path="model-validation.html"><a href="model-validation.html#boxcox"><i class="fa fa-check"></i><b>3.5.2</b> Boxcox</a></li>
+<li class="chapter" data-level="3.5.3" data-path="model-validation.html"><a href="model-validation.html#shapiro-wilk-hypothesis-test-for-normality"><i class="fa fa-check"></i><b>3.5.3</b> Shapiro Wilk hypothesis test for normality</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="onewayANOVA.html"><a href="onewayANOVA.html"><i class="fa fa-check"></i><b>4</b> One-way analysis of variance</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#when-to-use-this-model-1"><i class="fa fa-check"></i><b>4.1</b> When to use this model?</a></li>
+<li class="chapter" data-level="4.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#organisation-of-data-and-data-import"><i class="fa fa-check"></i><b>4.2</b> Organisation of data and data import</a></li>
+<li class="chapter" data-level="4.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#data-exploration"><i class="fa fa-check"></i><b>4.3</b> Data exploration</a></li>
+<li class="chapter" data-level="4.4" data-path="onewayANOVA.html"><a href="onewayANOVA.html#fitting-the-model"><i class="fa fa-check"></i><b>4.4</b> Fitting the model</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#with-default-reference-group"><i class="fa fa-check"></i><b>4.4.1</b> … with default reference group</a></li>
+<li class="chapter" data-level="4.4.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#without-a-reference-group"><i class="fa fa-check"></i><b>4.4.2</b> .. without a reference group</a></li>
+<li class="chapter" data-level="4.4.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#with-user-defined-reference-group"><i class="fa fa-check"></i><b>4.4.3</b> … with user defined reference group</a></li>
+<li class="chapter" data-level="4.4.4" data-path="onewayANOVA.html"><a href="onewayANOVA.html#digging-more-into-the-output-from-summary"><i class="fa fa-check"></i><b>4.4.4</b> Digging more into the output from <code>summary()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="onewayANOVA.html"><a href="onewayANOVA.html#validating-the-model"><i class="fa fa-check"></i><b>4.5</b> Validating the model</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#why-do-i-need-to-valide-the-model"><i class="fa fa-check"></i><b>4.5.1</b> Why do I need to valide the model?</a></li>
+<li class="chapter" data-level="4.5.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#how-do-i-validate-the-model-assumptions"><i class="fa fa-check"></i><b>4.5.2</b> How do I validate the model assumptions?</a></li>
+<li class="chapter" data-level="4.5.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#what-to-do-if-the-model-is-not-valid"><i class="fa fa-check"></i><b>4.5.3</b> What to do if the model is not valid?</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="onewayANOVA.html"><a href="onewayANOVA.html#extracting-estimates-with-emmeans"><i class="fa fa-check"></i><b>4.6</b> Extracting estimates with <code>emmeans()</code></a></li>
+<li class="chapter" data-level="4.7" data-path="onewayANOVA.html"><a href="onewayANOVA.html#reporting-the-results"><i class="fa fa-check"></i><b>4.7</b> Reporting the results</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#tables"><i class="fa fa-check"></i><b>4.7.1</b> Tables</a></li>
+<li class="chapter" data-level="4.7.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#figures"><i class="fa fa-check"></i><b>4.7.2</b> Figures</a></li>
+<li class="chapter" data-level="4.7.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#stat-methods-section"><i class="fa fa-check"></i><b>4.7.3</b> Stat methods section</a></li>
+</ul></li>
+<li class="chapter" data-level="4.8" data-path="onewayANOVA.html"><a href="onewayANOVA.html#alternatives-and-related-statistical-methods"><i class="fa fa-check"></i><b>4.8</b> Alternatives and related statistical methods</a>
+<ul>
+<li class="chapter" data-level="4.8.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#logtrans"><i class="fa fa-check"></i><b>4.8.1</b> Analysis on logtransformed scale</a></li>
+<li class="chapter" data-level="4.8.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#onewaynonpar"><i class="fa fa-check"></i><b>4.8.2</b> Relation to t-tests and non-parametric testing</a></li>
+<li class="chapter" data-level="4.8.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#bootstrap"><i class="fa fa-check"></i><b>4.8.3</b> When data are not normally distributed</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="poisson-regression.html"><a href="poisson-regression.html"><i class="fa fa-check"></i><b>5</b> Poisson regression</a></li>
+<li class="chapter" data-level="6" data-path="mixedmodels.html"><a href="mixedmodels.html"><i class="fa fa-check"></i><b>6</b> Analysis of repeated measures</a></li>
+<li class="chapter" data-level="7" data-path="twowayANOVA.html"><a href="twowayANOVA.html"><i class="fa fa-check"></i><b>7</b> Two-way analysis of variance</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="twowayANOVA.html"><a href="twowayANOVA.html#when-to-use-this-model-2"><i class="fa fa-check"></i><b>7.1</b> When to use this model?</a></li>
+<li class="chapter" data-level="7.2" data-path="twowayANOVA.html"><a href="twowayANOVA.html#organizing-data-2"><i class="fa fa-check"></i><b>7.2</b> Organizing data</a></li>
+<li class="chapter" data-level="7.3" data-path="twowayANOVA.html"><a href="twowayANOVA.html#data-exploration-1"><i class="fa fa-check"></i><b>7.3</b> Data exploration</a></li>
+<li class="chapter" data-level="7.4" data-path="twowayANOVA.html"><a href="twowayANOVA.html#fitting-model-2"><i class="fa fa-check"></i><b>7.4</b> Fitting model</a></li>
+<li class="chapter" data-level="7.5" data-path="twowayANOVA.html"><a href="twowayANOVA.html#validating-the-model-1"><i class="fa fa-check"></i><b>7.5</b> Validating the model</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="twowayANOVA.html"><a href="twowayANOVA.html#why-do-i-need-to-valide-the-model-1"><i class="fa fa-check"></i><b>7.5.1</b> Why do I need to valide the model?</a></li>
+<li class="chapter" data-level="7.5.2" data-path="twowayANOVA.html"><a href="twowayANOVA.html#how-do-i-validate-the-model-assumptions-1"><i class="fa fa-check"></i><b>7.5.2</b> How do I validate the model assumptions?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="twowayANOVA.html"><a href="twowayANOVA.html#hypothesis-test-2"><i class="fa fa-check"></i><b>7.6</b> Hypothesis test</a></li>
+<li class="chapter" data-level="7.7" data-path="twowayANOVA.html"><a href="twowayANOVA.html#extracting-estimates-with-emmeans-1"><i class="fa fa-check"></i><b>7.7</b> Extracting estimates with <code>emmeans()</code></a></li>
+<li class="chapter" data-level="7.8" data-path="twowayANOVA.html"><a href="twowayANOVA.html#writing-articlereport"><i class="fa fa-check"></i><b>7.8</b> Writing article/report</a>
+<ul>
+<li class="chapter" data-level="7.8.1" data-path="twowayANOVA.html"><a href="twowayANOVA.html#how-to-write-method-section"><i class="fa fa-check"></i><b>7.8.1</b> How to write method section</a></li>
+<li class="chapter" data-level="7.8.2" data-path="twowayANOVA.html"><a href="twowayANOVA.html#how-to-write-results-section"><i class="fa fa-check"></i><b>7.8.2</b> How to write results section</a></li>
+</ul></li>
+<li class="chapter" data-level="7.9" data-path="twowayANOVA.html"><a href="twowayANOVA.html#miscellaneous-1"><i class="fa fa-check"></i><b>7.9</b> Miscellaneous</a>
+<ul>
+<li class="chapter" data-level="7.9.1" data-path="twowayANOVA.html"><a href="twowayANOVA.html#why-to-not-use-anova-tables"><i class="fa fa-check"></i><b>7.9.1</b> Why to not use ANOVA tables</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A short introduction to common statistical data analysis techniques</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="onewayANOVA" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">Chapter 4</span> One-way analysis of variance<a href="onewayANOVA.html#onewayANOVA" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="when-to-use-this-model-1" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> When to use this model?<a href="onewayANOVA.html#when-to-use-this-model-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>One way analysis of variance (one-way ANOVA) may be used to compare the mean in two or more populations based on a sample from each population.</p>
+<p><em>Less formally:</em> when you measure a numerical/quantitative outcome and your observations are sampled from different groups!</p>
+<p>::: {.example #y1, antibio name=“Antibiotics and dung decomposition”}
+Bags of dung collected from 34 heifers that were fed with a standard feed possibly with different types of antibiotics added. The bags were dug into the soil for eight weeks, and the amount of organic material was measured for each bag.
+:::</p>
+<p><img src="Images/1_1_antibio_wide.png" /></p>
+<p>The purpose of one-way analysis of variance is to use the dataset to estimate and compare the average amount of organic material between groups as it would have looked if we had an infinitely large sample from each group. For a full description of the dataset see … .</p>
+<p>::: {.example #y2, dogs name=“Left atrial volume in dogs”}
+The maximal volume of the left atrial in mL was measured in 97 dogs of five different breeds. A subset of the dataset is displayed below
+:::</p>
+<pre><code>## # A tibble: 10 × 2
+##    race           maxLA
+##    &lt;chr&gt;          &lt;dbl&gt;
+##  1 Grand_Danois   30.3 
+##  2 Whippet         8.39
+##  3 Labrador       19.7 
+##  4 Petit_Basset    9.47
+##  5 Petit_Basset   11.3 
+##  6 Labrador       18.0 
+##  7 Petit_Basset   11.8 
+##  8 Whippet         9.42
+##  9 Grand_Danois   55.6 
+## 10 Border_Terrier  2.78</code></pre>
+<p>One-way ANOVA may be used to decide if this small dataset supports general statements of the form: the mean value of the maximal volume of the left atrial differs between breeds (or more specifically between breeds <em>A</em> and <em>B</em>). This is part of a larger dataset presented in the paper … .</p>
+</div>
+<div id="organisation-of-data-and-data-import" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Organisation of data and data import<a href="onewayANOVA.html#organisation-of-data-and-data-import" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>There are basically two popular ways to organise data for a one-way ANOVA: <em>wide format</em> and <em>long format</em>.</p>
+<p>In <em>wide format</em> measurements from separate groups are stored in separate columns …</p>
+<div class="figure">
+<img src="Images/1_1_antibio_wide.png" alt="" />
+<p class="caption">A screenshot of the dataset from Example <a href="#exm:antibio"><strong>??</strong></a> stored as an Excel file in wide format</p>
+</div>
+<p>Note that for data to be used in a one-way ANOVA there is no link between observations from different columns stored in the same row. If you believe that there is a connection/dependence between observations in the same row, then one-way ANOVA may not be the appropriate statistical analysis method. A common example of this is when data in the same row represent measurements on the same individual under different conditions or at different time points. Look <a href="mixedmodels.html#mixedmodels">here</a> for more relevant models.</p>
+<p>In <em>long format</em> each observation / measurement is stored in the same column and information in some other column is used to identify observations from the same group …</p>
+<div class="figure">
+<img src="Images/1_2_antibio_long.png" alt="" />
+<p class="caption">A screenshot of the dataset from Example <a href="#exm:antibio"><strong>??</strong></a> stored as an Excel file in long format</p>
+</div>
+<p>Whether data should be stored in wide or long format may depend on the software used to carry out the one-way ANOVA. In R it is recommended to use the long format. Below we show how to read in data stored in both formats, and how to use R to transform data from wide to long format.</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="onewayANOVA.html#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb78-2"><a href="onewayANOVA.html#cb78-2" aria-hidden="true" tabindex="-1"></a>antibio_wide <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">&quot;data/1_1_B_antibio_wideformat.xlsx&quot;</span>)</span>
+<span id="cb78-3"><a href="onewayANOVA.html#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(antibio_wide)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 6
+##   Alfacyp Control Enroflox Fenbenda Ivermect Spiramyc
+##     &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+## 1    3       2.43     2.74     2.74     3.03     2.8 
+## 2    3.02    2.63     2.88     2.88     2.81     2.85
+## 3    2.87    2.56     2.42     2.85     3.06     2.84
+## 4    2.96    2.76     2.73     3.02     3.11     2.93
+## 5    2.77    2.7      2.83     2.85     2.94    NA   
+## 6    2.75    2.54     2.66     2.66     3.06    NA</code></pre>
+<p>We want all the different treatment groups together in one column which we call <code>type</code>. This is because we want the reponse, <code>org</code>, to be in one column as well, so we have one observation per row (instead of the 6 observations per row). To fix this we will be using the function <code>pivot_longer()</code> in the <code>tidyverse</code> package:</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="onewayANOVA.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb80-2"><a href="onewayANOVA.html#cb80-2" aria-hidden="true" tabindex="-1"></a>antibio_long <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(antibio_wide, <span class="at">cols =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">names_to =</span> <span class="st">&quot;type&quot;</span>, <span class="at">values_to =</span> <span class="st">&quot;org&quot;</span>)</span>
+<span id="cb80-3"><a href="onewayANOVA.html#cb80-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(antibio_long)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 2
+##   type       org
+##   &lt;chr&gt;    &lt;dbl&gt;
+## 1 Alfacyp   3   
+## 2 Control   2.43
+## 3 Enroflox  2.74
+## 4 Fenbenda  2.74
+## 5 Ivermect  3.03
+## 6 Spiramyc  2.8</code></pre>
+<p>Now the data is in the <em>long format</em>. However. if we look at a summary of the data</p>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="onewayANOVA.html#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(antibio_long)</span></code></pre></div>
+<pre><code>##      type                org       
+##  Length:36          Min.   :2.420  
+##  Class :character   1st Qu.:2.732  
+##  Mode  :character   Median :2.835  
+##                     Mean   :2.814  
+##                     3rd Qu.:2.938  
+##                     Max.   :3.110  
+##                     NA&#39;s   :2</code></pre>
+<p>we can see that doing the <code>pivot_longer()</code> command has produced two <code>NA</code>s. This is because there are two fewer observations of the antibiotic <code>Spiramyc</code>, which then have been set to <code>NA</code>. These two <code>NA</code> observations can in this case be removed</p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="onewayANOVA.html#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb84-2"><a href="onewayANOVA.html#cb84-2" aria-hidden="true" tabindex="-1"></a>antibio_long <span class="ot">&lt;-</span> <span class="fu">drop_na</span>(antibio_long)</span></code></pre></div>
+</div>
+<div id="data-exploration" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Data exploration<a href="onewayANOVA.html#data-exploration" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Below we use the <code>antibio</code> dataset which is available in the R package <code>isdals</code> (so no need to run the code above to get data into R):</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="onewayANOVA.html#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(isdals)</span>
+<span id="cb85-2"><a href="onewayANOVA.html#cb85-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(antibio)</span>
+<span id="cb85-3"><a href="onewayANOVA.html#cb85-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(antibio)</span></code></pre></div>
+<pre><code>##       type  org
+## 1 Ivermect 3.03
+## 2 Ivermect 2.81
+## 3 Ivermect 3.06
+## 4 Ivermect 3.11
+## 5 Ivermect 2.94
+## 6 Ivermect 3.06</code></pre>
+<p>Data may be visualised by a boxplot</p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="onewayANOVA.html#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(org <span class="sc">~</span> type, <span class="at">data =</span> antibio, <span class="at">xlab =</span> <span class="st">&quot;Antibiotic added to feed&quot;</span>, <span class="at">ylab =</span> <span class="st">&quot;Organic material&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/y9-1.png" width="672" /></p>
+<p>or by a scatterplot</p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="onewayANOVA.html#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb88-2"><a href="onewayANOVA.html#cb88-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> antibio) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> type, <span class="at">y =</span> org)) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Antibiotic added to feed&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Organic material&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/y10-1.png" width="672" /></p>
+<p>It is convenient to compute summarizes of the outcome divided by group</p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="onewayANOVA.html#cb89-1" aria-hidden="true" tabindex="-1"></a>antibio_tab <span class="ot">&lt;-</span> <span class="fu">summarise</span>(<span class="fu">group_by</span>(antibio, type), <span class="at">n =</span> <span class="fu">n</span>(), <span class="at">mean_org =</span> <span class="fu">mean</span>(org), <span class="at">sd_org =</span> <span class="fu">sd</span>(org), <span class="at">median_org =</span> <span class="fu">median</span>(org))</span>
+<span id="cb89-2"><a href="onewayANOVA.html#cb89-2" aria-hidden="true" tabindex="-1"></a>antibio_tab</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 5
+##   type         n mean_org sd_org median_org
+##   &lt;fct&gt;    &lt;int&gt;    &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Alfacyp      6     2.90 0.117        2.92
+## 2 Control      6     2.60 0.119        2.60
+## 3 Enroflox     6     2.71 0.162        2.74
+## 4 Fenbenda     6     2.83 0.124        2.85
+## 5 Ivermect     6     3.00 0.109        3.04
+## 6 Spiramyc     4     2.86 0.0545       2.84</code></pre>
+<p>The dataset with grouped summaries may be used to display the mean in each group with added error bars indicating the size of the standard deviation.</p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="onewayANOVA.html#cb91-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Default bar plot</span></span>
+<span id="cb91-2"><a href="onewayANOVA.html#cb91-2" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(antibio_tab, <span class="fu">aes</span>(<span class="at">x =</span> type, <span class="at">y =</span> mean_org, <span class="at">fill =</span> type)) <span class="sc">+</span> </span>
+<span id="cb91-3"><a href="onewayANOVA.html#cb91-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">&quot;identity&quot;</span>, </span>
+<span id="cb91-4"><a href="onewayANOVA.html#cb91-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">position=</span><span class="fu">position_dodge</span>(), <span class="at">width =</span> .<span class="dv">65</span>) <span class="sc">+</span></span>
+<span id="cb91-5"><a href="onewayANOVA.html#cb91-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean_org <span class="sc">-</span> sd_org, <span class="at">ymax =</span> mean_org <span class="sc">+</span> sd_org), <span class="at">width=</span>.<span class="dv">2</span>,</span>
+<span id="cb91-6"><a href="onewayANOVA.html#cb91-6" aria-hidden="true" tabindex="-1"></a>                 <span class="at">position=</span><span class="fu">position_dodge</span>(.<span class="dv">9</span>)) </span>
+<span id="cb91-7"><a href="onewayANOVA.html#cb91-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Finished bar plot</span></span>
+<span id="cb91-8"><a href="onewayANOVA.html#cb91-8" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">title=</span><span class="st">&quot;Barplot of sample means with error bars (+/- SD)&quot;</span>, <span class="at">x=</span><span class="st">&quot;Antibiotic added to feed&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Organic material&quot;</span>, <span class="at">fill =</span> <span class="st">&quot;Antibiotic&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/y12-1.png" width="672" /></p>
+</div>
+<div id="fitting-the-model" class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> Fitting the model<a href="onewayANOVA.html#fitting-the-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The one-way ANOVA model is fitted in R using the <code>lm()</code> function. The <code>lm()</code> function returns an object of class <code>lm</code> containing many components that may be of interest to the user. Different useful functions to extract various components from an <code>lm</code> object are described in the following sections.</p>
+<p>Basically, the <code>lm</code> object obtained by fitting a one-way ANOVA model contains all information required to describe the estimated mean for each group and the variability of the estimates due to the fact that we only have a fairly small sample (from an infinitely large target population).</p>
+<p>An important point is that the way the estimated group means are stored depends on the <code>formula</code> used to fit the model. It might be useful for you to skip the following and go directly to section about <a href="#emmeans1"><code>emmeans</code></a></p>
+<div id="with-default-reference-group" class="section level3 hasAnchor" number="4.4.1">
+<h3><span class="header-section-number">4.4.1</span> … with default reference group<a href="onewayANOVA.html#with-default-reference-group" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The one-way ANOVA model for Example <a href="#exm:antibio"><strong>??</strong></a> may be fitted using</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="onewayANOVA.html#cb92-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(org <span class="sc">~</span> type, <span class="at">data =</span> antibio)</span>
+<span id="cb92-2"><a href="onewayANOVA.html#cb92-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = org ~ type, data = antibio)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.29000 -0.06000  0.01833  0.07250  0.18667 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   2.89500    0.04970  58.248  &lt; 2e-16 ***
+## typeControl  -0.29167    0.07029  -4.150 0.000281 ***
+## typeEnroflox -0.18500    0.07029  -2.632 0.013653 *  
+## typeFenbenda -0.06167    0.07029  -0.877 0.387770    
+## typeIvermect  0.10667    0.07029   1.518 0.140338    
+## typeSpiramyc -0.04000    0.07858  -0.509 0.614738    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1217 on 28 degrees of freedom
+## Multiple R-squared:  0.5874, Adjusted R-squared:  0.5137 
+## F-statistic: 7.973 on 5 and 28 DF,  p-value: 8.953e-05</code></pre>
+<p>But note that here the estimates of the model are stored as</p>
+<ul>
+<li>the estimate for the mean of the outcome in a reference group</li>
+<li>the estimate of the difference between the mean of any other group and the reference group</li>
+</ul>
+<p>The reference group is chosen as the first in alpahbetic order of the labels of the group (here given by the variable <code>type</code>). For this dataset the reference group is <code>type = Alphacyp</code>. The output from the <code>summary()</code> function tells us that the estimated mean amount of organic matter is 2.895 for the reference group (<code>Alphacyp</code>), and that e.g. the estimated difference between mean in the group <code>type = Ivermect</code> and the reference group is 0.107. E.g. the estimated mean for <code>type = Ivermect</code> is 2.895+0.107 = 3.002.</p>
+</div>
+<div id="without-a-reference-group" class="section level3 hasAnchor" number="4.4.2">
+<h3><span class="header-section-number">4.4.2</span> .. without a reference group<a href="onewayANOVA.html#without-a-reference-group" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To fit a linear model without a reference group, one can add <code>-1</code> to the formula to remove the <code>Intercept</code>:</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="onewayANOVA.html#cb94-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(org <span class="sc">~</span> type <span class="sc">-</span> <span class="dv">1</span>, <span class="at">data =</span> antibio)</span>
+<span id="cb94-2"><a href="onewayANOVA.html#cb94-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = org ~ type - 1, data = antibio)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.29000 -0.06000  0.01833  0.07250  0.18667 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## typeAlfacyp   2.89500    0.04970   58.25   &lt;2e-16 ***
+## typeControl   2.60333    0.04970   52.38   &lt;2e-16 ***
+## typeEnroflox  2.71000    0.04970   54.53   &lt;2e-16 ***
+## typeFenbenda  2.83333    0.04970   57.01   &lt;2e-16 ***
+## typeIvermect  3.00167    0.04970   60.39   &lt;2e-16 ***
+## typeSpiramyc  2.85500    0.06087   46.90   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1217 on 28 degrees of freedom
+## Multiple R-squared:  0.9985, Adjusted R-squared:  0.9981 
+## F-statistic:  3034 on 6 and 28 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Here the <code>lm</code> object stores estimates for the mean amount of organic matter for any specific <code>type</code>, e.g. for <code>type = Enroflox</code> the corresponding estimate is 2.71.</p>
+<p>The <code>Std. Error</code> is the standard error of the estimates. When the estimates are obtained just a the sample average of observations in a group, the <code>Std. Error</code> is computed as the estimated with-in group standard deviation (in output: <code>Residual standard error</code>) divided by the square root of the number of observations in the group.</p>
+</div>
+<div id="with-user-defined-reference-group" class="section level3 hasAnchor" number="4.4.3">
+<h3><span class="header-section-number">4.4.3</span> … with user defined reference group<a href="onewayANOVA.html#with-user-defined-reference-group" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To change the reference group we can use <code>relevel()</code> when fitting the model. Here it is important to note that <code>relevel()</code> can only be used on variables of type <code>factor</code>:</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="onewayANOVA.html#cb96-1" aria-hidden="true" tabindex="-1"></a>m3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(org <span class="sc">~</span> <span class="fu">relevel</span>(<span class="fu">factor</span>(type), <span class="at">ref =</span> <span class="st">&quot;Control&quot;</span>), <span class="at">data =</span> antibio)</span>
+<span id="cb96-2"><a href="onewayANOVA.html#cb96-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m3)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = org ~ relevel(factor(type), ref = &quot;Control&quot;), data = antibio)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.29000 -0.06000  0.01833  0.07250  0.18667 
+## 
+## Coefficients:
+##                                                Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                                     2.60333    0.04970  52.379  &lt; 2e-16 ***
+## relevel(factor(type), ref = &quot;Control&quot;)Alfacyp   0.29167    0.07029   4.150 0.000281 ***
+## relevel(factor(type), ref = &quot;Control&quot;)Enroflox  0.10667    0.07029   1.518 0.140338    
+## relevel(factor(type), ref = &quot;Control&quot;)Fenbenda  0.23000    0.07029   3.272 0.002834 ** 
+## relevel(factor(type), ref = &quot;Control&quot;)Ivermect  0.39833    0.07029   5.667  4.5e-06 ***
+## relevel(factor(type), ref = &quot;Control&quot;)Spiramyc  0.25167    0.07858   3.202 0.003384 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1217 on 28 degrees of freedom
+## Multiple R-squared:  0.5874, Adjusted R-squared:  0.5137 
+## F-statistic: 7.973 on 5 and 28 DF,  p-value: 8.953e-05</code></pre>
+<p>Now the reference group is <code>type = Control</code>. This means that the estimate for the <code>Intercept</code> 2.603 is the estimated mean amount of organic matter for the <code>Control</code> group. The predicted values for the other types can be calculated the same way as above.</p>
+</div>
+<div id="digging-more-into-the-output-from-summary" class="section level3 hasAnchor" number="4.4.4">
+<h3><span class="header-section-number">4.4.4</span> Digging more into the output from <code>summary()</code><a href="onewayANOVA.html#digging-more-into-the-output-from-summary" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Let us fit the one-way ANOVA model with <code>Control</code> as reference group. If it is indisputable which group should be the reference group I may be convenient to change this as indicated here:</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="onewayANOVA.html#cb98-1" aria-hidden="true" tabindex="-1"></a>antibio<span class="sc">$</span>type <span class="ot">&lt;-</span> <span class="fu">relevel</span>(<span class="fu">factor</span>(antibio<span class="sc">$</span>type), <span class="at">ref =</span> <span class="st">&quot;Control&quot;</span>)</span>
+<span id="cb98-2"><a href="onewayANOVA.html#cb98-2" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(org <span class="sc">~</span> type, <span class="at">data =</span> antibio)</span>
+<span id="cb98-3"><a href="onewayANOVA.html#cb98-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m4)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = org ~ type, data = antibio)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.29000 -0.06000  0.01833  0.07250  0.18667 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)   2.60333    0.04970  52.379  &lt; 2e-16 ***
+## typeAlfacyp   0.29167    0.07029   4.150 0.000281 ***
+## typeEnroflox  0.10667    0.07029   1.518 0.140338    
+## typeFenbenda  0.23000    0.07029   3.272 0.002834 ** 
+## typeIvermect  0.39833    0.07029   5.667  4.5e-06 ***
+## typeSpiramyc  0.25167    0.07858   3.202 0.003384 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.1217 on 28 degrees of freedom
+## Multiple R-squared:  0.5874, Adjusted R-squared:  0.5137 
+## F-statistic: 7.973 on 5 and 28 DF,  p-value: 8.953e-05</code></pre>
+<p>When you look at a <code>summary()</code> of an <code>lm</code> object proceed as follows:</p>
+<ul>
+<li>Make sure that you understand what the content in each row of the <code>Coefficients</code> table is about. In the output above:
+<ul>
+<li><code>(Intercept)</code>: everything in this row is about the estimated mean in the reference group (<code>type = Control</code>)</li>
+<li><code>typeAlphacyp</code>: everything in this row is about the estimate for the difference between means in the <code>Alphacyp</code> group and the reference group</li>
+<li><code>typeEnroflox-typeSpiramyc</code>: same as for <code>typeAlphacyp</code></li>
+</ul></li>
+<li><code>Estimate</code>: contains the estimate for the parameter (could be either the mean in the <code>Control</code> group or a difference to the <code>Control</code> group)</li>
+<li><code>Std. Error</code>: contains the sampling variation of the estimate (that you would expect to observe if you repeated your experiment and computed the estimate over and over again)</li>
+<li><code>t value + Pr(&gt;|t|)</code>: the t-test statistic and the corresponding P-value for testing that the target parameter (for the corresponding row) equals zero. This is most likely only relevant, if the target parameter of the row is a difference between means.</li>
+</ul>
+<p>For this specific example the last five rows of the <code>Coefficients</code> table concerns differences between the mean amount of organic matter when one of the five types of antibiotics is added to the feed, and the mean amount if no antibiotics is added.</p>
+<p>As lower P-values are evidence against the null hypothesis (here: no difference compared to <code>Control</code>) we conclude that all antibiotics except <code>Enroflox</code> appears to increase the content of organic matter in bags.</p>
+<p>The <code>confint()</code> function constructs confidence intervals for the target parameters based the a model fitted with the <code>lm()</code> function.</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="onewayANOVA.html#cb100-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(m4)</span></code></pre></div>
+<pre><code>##                    2.5 %    97.5 %
+## (Intercept)   2.50152445 2.7051422
+## typeAlfacyp   0.14768716 0.4356462
+## typeEnroflox -0.03731284 0.2506462
+## typeFenbenda  0.08602049 0.3739795
+## typeIvermect  0.25435382 0.5423128
+## typeSpiramyc  0.09069268 0.4126407</code></pre>
+<p>For the model <code>m4</code> where <code>Control</code> is used a reference when communicating the estimates then we get 95 % confidence intervals for the mean content of organic matter in the <code>Control</code> group, and 95 % confidence intervals for difference between mean amount in any other group and the <code>Control</code> group.</p>
+<p>The confidence interval for the difference between the mean amount in the <code>Alphacyp</code> group and the <code>Control</code> group is [0.148, 0.436]. The fact that zero is not contained in this interval is consistent with our finding from the output of <code>summary(m4)</code>: the P-value of 0.000281 indicate that there is a significant difference between the mean of the two groups.</p>
+</div>
+</div>
+<div id="validating-the-model" class="section level2 hasAnchor" number="4.5">
+<h2><span class="header-section-number">4.5</span> Validating the model<a href="onewayANOVA.html#validating-the-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="why-do-i-need-to-valide-the-model" class="section level3 hasAnchor" number="4.5.1">
+<h3><span class="header-section-number">4.5.1</span> Why do I need to valide the model?<a href="onewayANOVA.html#why-do-i-need-to-valide-the-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The one-way ANOVA estimates the mean of each population by the average of observations from each group. But it also quantifies the uncertainty of the estimates (due to sampling variation) assuming that</p>
+<ul>
+<li>observations within each group are independent</li>
+<li>observations within each group follows a normal distribution with equal variances</li>
+</ul>
+<p>All that we extract from the one-way ANOVA model about uncertainty of estimates (later also tests) is only valid if the model assumptions are valid.</p>
+</div>
+<div id="how-do-i-validate-the-model-assumptions" class="section level3 hasAnchor" number="4.5.2">
+<h3><span class="header-section-number">4.5.2</span> How do I validate the model assumptions?<a href="onewayANOVA.html#how-do-i-validate-the-model-assumptions" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong><em>Something about independence assumption</em></strong></p>
+<p>We must basically just check that observations within each group looks like an (independent) sample from a normal distribution and that the variances (but not necessarily the means) are the same.</p>
+<p><strong>Be careful:</strong> Do not check that the pooled dataset looks like a sample from a normal distribution!</p>
+<p><strong>Show how to extract residuals, using group_by -&gt; summarise to check variation within each group</strong></p>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="onewayANOVA.html#cb102-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb102-2"><a href="onewayANOVA.html#cb102-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(<span class="fu">group_by</span>(antibio, type), <span class="at">mean_org =</span> <span class="fu">mean</span>(org), <span class="at">sd_org =</span> <span class="fu">sd</span>(org))</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 3
+##   type     mean_org sd_org
+##   &lt;fct&gt;       &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Control      2.60 0.119 
+## 2 Alfacyp      2.90 0.117 
+## 3 Enroflox     2.71 0.162 
+## 4 Fenbenda     2.83 0.124 
+## 5 Ivermect     3.00 0.109 
+## 6 Spiramyc     2.86 0.0545</code></pre>
+<p>Here the sd_org should be approximately the same, if we want to use one-way-ANOVA</p>
+<p><strong>Show how to make residual plot and qqplot. Make note about difference between residuals and standardized residuals.</strong></p>
+<p>Residual plot</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="onewayANOVA.html#cb104-1" aria-hidden="true" tabindex="-1"></a>antibio_residuals <span class="ot">&lt;-</span> <span class="fu">resid</span>(m2) </span>
+<span id="cb104-2"><a href="onewayANOVA.html#cb104-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-3"><a href="onewayANOVA.html#cb104-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(antibio<span class="sc">$</span>org, antibio_residuals,</span>
+<span id="cb104-4"><a href="onewayANOVA.html#cb104-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">&quot;Residuals&quot;</span>,</span>
+<span id="cb104-5"><a href="onewayANOVA.html#cb104-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;org&quot;</span>, <span class="at">main=</span><span class="st">&quot;Residual plot of antibio data&quot;</span>) </span>
+<span id="cb104-6"><a href="onewayANOVA.html#cb104-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>) </span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/y19-1.png" width="672" />
+When looking at an residual plot, it is important that the residuals are:</p>
+<ul>
+<li>Distributed randomly around the 0,0 line (i.e. there are no patterns).</li>
+<li>Cluster around the middle of the plot</li>
+<li>They are around the lower single digits of the y-axis (i.e the variance of the residuals is small)</li>
+</ul>
+<p>In this plot it may be hard to see as it has few observations. It all in all looks random but there are a few concerns at org == 2.4 and org &gt; 3, as there the residual are only at one side of the line.</p>
+<p>standardized residuals (often used to identify outliers, where if the standardized residual is greater than +/- 3 it’s probably an outlier)</p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="onewayANOVA.html#cb105-1" aria-hidden="true" tabindex="-1"></a>antibio_standard_res <span class="ot">&lt;-</span> <span class="fu">rstandard</span>(m2)</span>
+<span id="cb105-2"><a href="onewayANOVA.html#cb105-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb105-3"><a href="onewayANOVA.html#cb105-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(antibio<span class="sc">$</span>org, antibio_standard_res,</span>
+<span id="cb105-4"><a href="onewayANOVA.html#cb105-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">&quot;Standardized residuals&quot;</span>,</span>
+<span id="cb105-5"><a href="onewayANOVA.html#cb105-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;org&quot;</span>, <span class="at">main=</span><span class="st">&quot;Standardized Residual plot of antibio data&quot;</span>) </span>
+<span id="cb105-6"><a href="onewayANOVA.html#cb105-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/y20-1.png" width="672" /></p>
+<p>qq-plot (do this for all types)</p>
+<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb106-1"><a href="onewayANOVA.html#cb106-1" aria-hidden="true" tabindex="-1"></a>types <span class="ot">&lt;-</span> <span class="fu">unique</span>(antibio<span class="sc">$</span>type)</span>
+<span id="cb106-2"><a href="onewayANOVA.html#cb106-2" aria-hidden="true" tabindex="-1"></a>{<span class="fu">qqnorm</span>(antibio<span class="sc">$</span>org[<span class="fu">which</span>(antibio<span class="sc">$</span>type<span class="sc">==</span>types[<span class="dv">6</span>])], <span class="at">pch =</span> <span class="dv">1</span>, <span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb106-3"><a href="onewayANOVA.html#cb106-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(antibio<span class="sc">$</span>org[<span class="fu">which</span>(antibio<span class="sc">$</span>type<span class="sc">==</span>types[<span class="dv">6</span>])], <span class="at">col =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)}</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/y21-1.png" width="672" /></p>
+</div>
+<div id="what-to-do-if-the-model-is-not-valid" class="section level3 hasAnchor" number="4.5.3">
+<h3><span class="header-section-number">4.5.3</span> What to do if the model is not valid?<a href="onewayANOVA.html#what-to-do-if-the-model-is-not-valid" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Show example where things do not look good. Link to section on alternatives.</strong></p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="onewayANOVA.html#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb107-2"><a href="onewayANOVA.html#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(<span class="fu">group_by</span>(dogs, race), <span class="at">mean_maxLA =</span> <span class="fu">mean</span>(maxLA), <span class="at">sd_maxLA =</span> <span class="fu">sd</span>(maxLA))</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 3
+##   race           mean_maxLA sd_maxLA
+##   &lt;chr&gt;               &lt;dbl&gt;    &lt;dbl&gt;
+## 1 Border_Terrier       5.08     1.29
+## 2 Grand_Danois        35.5      8.42
+## 3 Labrador            18.9      3.38
+## 4 Petit_Basset        12.1      2.68
+## 5 Whippet             10.5      2.10</code></pre>
+<p>Here the standard deviation between the groups varies alot, which means one-way-ANOVA is not the right method to use.</p>
+<p>Residual plot for dogs dataset</p>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="onewayANOVA.html#cb109-1" aria-hidden="true" tabindex="-1"></a>m4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(maxLA <span class="sc">~</span> race, <span class="at">data =</span> dogs)</span>
+<span id="cb109-2"><a href="onewayANOVA.html#cb109-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-3"><a href="onewayANOVA.html#cb109-3" aria-hidden="true" tabindex="-1"></a>dogs_residuals <span class="ot">&lt;-</span> <span class="fu">resid</span>(m4) </span>
+<span id="cb109-4"><a href="onewayANOVA.html#cb109-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb109-5"><a href="onewayANOVA.html#cb109-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(dogs<span class="sc">$</span>maxLA, dogs_residuals,</span>
+<span id="cb109-6"><a href="onewayANOVA.html#cb109-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab=</span><span class="st">&quot;Residuals&quot;</span>,</span>
+<span id="cb109-7"><a href="onewayANOVA.html#cb109-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;maxLA&quot;</span>, <span class="at">main=</span><span class="st">&quot;Residual plot of dogs data&quot;</span>) </span>
+<span id="cb109-8"><a href="onewayANOVA.html#cb109-8" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="dv">0</span>, <span class="dv">0</span>) </span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/y23-1.png" width="672" /></p>
+<p>qq-plot for dogs data (do this for all different races of dogs)</p>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="onewayANOVA.html#cb110-1" aria-hidden="true" tabindex="-1"></a>races <span class="ot">&lt;-</span> <span class="fu">unique</span>(dogs<span class="sc">$</span>race)</span>
+<span id="cb110-2"><a href="onewayANOVA.html#cb110-2" aria-hidden="true" tabindex="-1"></a>{<span class="fu">qqnorm</span>(dogs<span class="sc">$</span>maxLA[<span class="fu">which</span>(dogs<span class="sc">$</span>race<span class="sc">==</span>races[<span class="dv">3</span>])], <span class="at">pch =</span> <span class="dv">1</span>, <span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb110-3"><a href="onewayANOVA.html#cb110-3" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(dogs<span class="sc">$</span>maxLA[<span class="fu">which</span>(dogs<span class="sc">$</span>race<span class="sc">==</span>races[<span class="dv">3</span>])], <span class="at">col =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">lwd =</span> <span class="dv">2</span>)}</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/y24-1.png" width="672" /></p>
+</div>
+</div>
+<div id="extracting-estimates-with-emmeans" class="section level2 hasAnchor" number="4.6">
+<h2><span class="header-section-number">4.6</span> Extracting estimates with <code>emmeans()</code><a href="onewayANOVA.html#extracting-estimates-with-emmeans" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The <code>emmeans</code> R package is useful for extracting estimates for means or differences between means based on a one-way ANOVA model.</p>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="onewayANOVA.html#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb111-2"><a href="onewayANOVA.html#cb111-2" aria-hidden="true" tabindex="-1"></a>model1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(org <span class="sc">~</span> type, <span class="at">data =</span> antibio)</span></code></pre></div>
+<p>To get estimates and all pairwise comparisons with the <code>control</code> group use</p>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="onewayANOVA.html#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">emmeans</span>(model1, <span class="at">specs =</span> trt.vs.ctrlk <span class="sc">~</span> type, <span class="at">ref =</span> <span class="st">&quot;Control&quot;</span>)</span></code></pre></div>
+<pre><code>## $emmeans
+##  type     emmean     SE df lower.CL upper.CL
+##  Control    2.60 0.0497 28     2.50     2.71
+##  Alfacyp    2.90 0.0497 28     2.79     3.00
+##  Enroflox   2.71 0.0497 28     2.61     2.81
+##  Fenbenda   2.83 0.0497 28     2.73     2.94
+##  Ivermect   3.00 0.0497 28     2.90     3.10
+##  Spiramyc   2.85 0.0609 28     2.73     2.98
+## 
+## Confidence level used: 0.95 
+## 
+## $contrasts
+##  contrast           estimate     SE df t.ratio p.value
+##  Alfacyp - Control     0.292 0.0703 28   4.150  0.0013
+##  Enroflox - Control    0.107 0.0703 28   1.518  0.4266
+##  Fenbenda - Control    0.230 0.0703 28   3.272  0.0125
+##  Ivermect - Control    0.398 0.0703 28   5.667  &lt;.0001
+##  Spiramyc - Control    0.252 0.0786 28   3.202  0.0149
+## 
+## P value adjustment: dunnettx method for 5 tests</code></pre>
+<p><strong>Interpretation of output:</strong> ….</p>
+<p>To get all pairwise comparisons between group mean with P-value adjustment correspoding to the Tukey test use</p>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="onewayANOVA.html#cb114-1" aria-hidden="true" tabindex="-1"></a>emm1 <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(model1, <span class="at">specs =</span> <span class="st">&quot;type&quot;</span>)</span>
+<span id="cb114-2"><a href="onewayANOVA.html#cb114-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(emm1)</span></code></pre></div>
+<pre><code>##  contrast            estimate     SE df t.ratio p.value
+##  Control - Alfacyp    -0.2917 0.0703 28  -4.150  0.0035
+##  Control - Enroflox   -0.1067 0.0703 28  -1.518  0.6563
+##  Control - Fenbenda   -0.2300 0.0703 28  -3.272  0.0305
+##  Control - Ivermect   -0.3983 0.0703 28  -5.667  0.0001
+##  Control - Spiramyc   -0.2517 0.0786 28  -3.202  0.0358
+##  Alfacyp - Enroflox    0.1850 0.0703 28   2.632  0.1226
+##  Alfacyp - Fenbenda    0.0617 0.0703 28   0.877  0.9488
+##  Alfacyp - Ivermect   -0.1067 0.0703 28  -1.518  0.6563
+##  Alfacyp - Spiramyc    0.0400 0.0786 28   0.509  0.9954
+##  Enroflox - Fenbenda  -0.1233 0.0703 28  -1.755  0.5094
+##  Enroflox - Ivermect  -0.2917 0.0703 28  -4.150  0.0035
+##  Enroflox - Spiramyc  -0.1450 0.0786 28  -1.845  0.4549
+##  Fenbenda - Ivermect  -0.1683 0.0703 28  -2.395  0.1923
+##  Fenbenda - Spiramyc  -0.0217 0.0786 28  -0.276  0.9998
+##  Ivermect - Spiramyc   0.1467 0.0786 28   1.866  0.4424
+## 
+## P value adjustment: tukey method for comparing a family of 6 estimates</code></pre>
+<p><strong>Interpretation of output:</strong> ….</p>
+</div>
+<div id="reporting-the-results" class="section level2 hasAnchor" number="4.7">
+<h2><span class="header-section-number">4.7</span> Reporting the results<a href="onewayANOVA.html#reporting-the-results" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Focus on</p>
+<ul>
+<li>how to avoid errors when transferring results from R to you manuscript</li>
+<li>how to make it easy to update results, figures</li>
+</ul>
+<div id="tables" class="section level3 hasAnchor" number="4.7.1">
+<h3><span class="header-section-number">4.7.1</span> Tables<a href="onewayANOVA.html#tables" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>How to export a nice table.</p>
+<ul>
+<li>as csv-file</li>
+<li>as csv-file in a format that fits into a table in a manuscript written in word</li>
+<li>as latex output</li>
+</ul>
+<p>Here is a function that transforms data in a long format to a nice table. The first argument it needs is the dataframe used. The second is a vector of the variables, which in this example is the variable <code>org</code>. The third argument is the factor variable we were interested in compairing means of, i.e. the different groups used in the One-way-ANOVA (This can either be the different names or the whole column from the data). The number of digits can also be varied by changing the <code>digits</code> argumnet. <code>Switch</code> controls what kind of table the function outputs (this will be shown below).</p>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="onewayANOVA.html#cb116-1" aria-hidden="true" tabindex="-1"></a>table_func <span class="ot">&lt;-</span> <span class="cf">function</span>(df, var, fact_Names,<span class="at">digits=</span><span class="dv">2</span>, <span class="at">Switch=</span><span class="cn">TRUE</span>){</span>
+<span id="cb116-2"><a href="onewayANOVA.html#cb116-2" aria-hidden="true" tabindex="-1"></a>  Names <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(fact_Names)</span>
+<span id="cb116-3"><a href="onewayANOVA.html#cb116-3" aria-hidden="true" tabindex="-1"></a>  Names <span class="ot">&lt;-</span> <span class="fu">as.character</span>(<span class="fu">unique</span>(Names))</span>
+<span id="cb116-4"><a href="onewayANOVA.html#cb116-4" aria-hidden="true" tabindex="-1"></a>  df2 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="cn">NA</span>,    <span class="co"># Create empty data frame</span></span>
+<span id="cb116-5"><a href="onewayANOVA.html#cb116-5" aria-hidden="true" tabindex="-1"></a>                          <span class="at">nrow =</span> <span class="fu">length</span>(var),</span>
+<span id="cb116-6"><a href="onewayANOVA.html#cb116-6" aria-hidden="true" tabindex="-1"></a>                          <span class="at">ncol =</span> (<span class="fu">length</span>(Names)<span class="sc">+</span><span class="dv">1</span>)<span class="sc">*</span><span class="dv">3</span><span class="sc">+</span><span class="dv">1</span>))</span>
+<span id="cb116-7"><a href="onewayANOVA.html#cb116-7" aria-hidden="true" tabindex="-1"></a>  Names_new <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="dv">3</span><span class="sc">*</span><span class="fu">length</span>(Names))</span>
+<span id="cb116-8"><a href="onewayANOVA.html#cb116-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(Names)){</span>
+<span id="cb116-9"><a href="onewayANOVA.html#cb116-9" aria-hidden="true" tabindex="-1"></a>    Names_new[(i<span class="sc">*</span><span class="dv">3</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">-</span><span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">paste0</span>(Names[i],<span class="st">&quot;_n&quot;</span>)</span>
+<span id="cb116-10"><a href="onewayANOVA.html#cb116-10" aria-hidden="true" tabindex="-1"></a>    Names_new[(i<span class="sc">*</span><span class="dv">3</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">-</span><span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">paste0</span>(Names[i],<span class="st">&quot;_mean&quot;</span>)</span>
+<span id="cb116-11"><a href="onewayANOVA.html#cb116-11" aria-hidden="true" tabindex="-1"></a>    Names_new[(i<span class="sc">*</span><span class="dv">3</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">-</span><span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">paste0</span>(Names[i],<span class="st">&quot;_SD&quot;</span>)</span>
+<span id="cb116-12"><a href="onewayANOVA.html#cb116-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb116-13"><a href="onewayANOVA.html#cb116-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(df2) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Variables&quot;</span>,<span class="st">&quot;Total_n&quot;</span>,<span class="st">&quot;Total_mean&quot;</span>,<span class="st">&quot;Total_SD&quot;</span>,Names_new)</span>
+<span id="cb116-14"><a href="onewayANOVA.html#cb116-14" aria-hidden="true" tabindex="-1"></a>  df2<span class="sc">$</span>Variables <span class="ot">&lt;-</span> var</span>
+<span id="cb116-15"><a href="onewayANOVA.html#cb116-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(var)){</span>
+<span id="cb116-16"><a href="onewayANOVA.html#cb116-16" aria-hidden="true" tabindex="-1"></a>    df2<span class="sc">$</span>Total_n[i] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(df[,<span class="fu">which</span>(<span class="fu">names</span>(df)<span class="sc">==</span>var[i] )]))</span>
+<span id="cb116-17"><a href="onewayANOVA.html#cb116-17" aria-hidden="true" tabindex="-1"></a>    df2<span class="sc">$</span>Total_mean[i] <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">mean</span>(df[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(df[,<span class="fu">which</span>(<span class="fu">names</span>(df)<span class="sc">==</span>var[i] )])),<span class="fu">which</span>(<span class="fu">names</span>(df)<span class="sc">==</span>var[i] )]),digits)</span>
+<span id="cb116-18"><a href="onewayANOVA.html#cb116-18" aria-hidden="true" tabindex="-1"></a>    df2<span class="sc">$</span>Total_SD[i] <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">sd</span>(df[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(df[,<span class="fu">which</span>(<span class="fu">names</span>(df)<span class="sc">==</span>var[i] )])),<span class="fu">which</span>(<span class="fu">names</span>(df)<span class="sc">==</span>var[i] )]),digits)</span>
+<span id="cb116-19"><a href="onewayANOVA.html#cb116-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(Names)){</span>
+<span id="cb116-20"><a href="onewayANOVA.html#cb116-20" aria-hidden="true" tabindex="-1"></a>      df2[i,<span class="fu">which</span>(<span class="fu">names</span>(df2)<span class="sc">==</span>Names_new[(t<span class="sc">*</span><span class="dv">3</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">-</span><span class="dv">3</span>])] <span class="ot">&lt;-</span> <span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(df[<span class="fu">which</span>(fact_Names<span class="sc">==</span>Names[t]),<span class="fu">which</span>(<span class="fu">names</span>(df)<span class="sc">==</span>var[i] )]))</span>
+<span id="cb116-21"><a href="onewayANOVA.html#cb116-21" aria-hidden="true" tabindex="-1"></a>      df2[i,<span class="fu">which</span>(<span class="fu">names</span>(df2)<span class="sc">==</span>Names_new[(t<span class="sc">*</span><span class="dv">3</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">-</span><span class="dv">2</span>])] <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">mean</span>(df[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(df[,<span class="fu">which</span>(<span class="fu">names</span>(df)<span class="sc">==</span>var[i] )]) <span class="sc">&amp;</span> fact_Names<span class="sc">==</span>Names[t]),<span class="fu">which</span>(<span class="fu">names</span>(df)<span class="sc">==</span>var[i] )]),digits)</span>
+<span id="cb116-22"><a href="onewayANOVA.html#cb116-22" aria-hidden="true" tabindex="-1"></a>      df2[i,<span class="fu">which</span>(<span class="fu">names</span>(df2)<span class="sc">==</span>Names_new[(t<span class="sc">*</span><span class="dv">3</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">-</span><span class="dv">1</span>])] <span class="ot">&lt;-</span> <span class="fu">round</span>(<span class="fu">sd</span>(df[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(df[,<span class="fu">which</span>(<span class="fu">names</span>(df)<span class="sc">==</span>var[i] )]) <span class="sc">&amp;</span> fact_Names<span class="sc">==</span>Names[t]),<span class="fu">which</span>(<span class="fu">names</span>(df)<span class="sc">==</span>var[i] )]),digits)</span>
+<span id="cb116-23"><a href="onewayANOVA.html#cb116-23" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb116-24"><a href="onewayANOVA.html#cb116-24" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb116-25"><a href="onewayANOVA.html#cb116-25" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb116-26"><a href="onewayANOVA.html#cb116-26" aria-hidden="true" tabindex="-1"></a>  df3 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="cn">NA</span>,    <span class="co"># Create empty data frame</span></span>
+<span id="cb116-27"><a href="onewayANOVA.html#cb116-27" aria-hidden="true" tabindex="-1"></a>                          <span class="at">nrow =</span> <span class="fu">length</span>(var),</span>
+<span id="cb116-28"><a href="onewayANOVA.html#cb116-28" aria-hidden="true" tabindex="-1"></a>                          <span class="at">ncol =</span> (<span class="fu">length</span>(Names)<span class="sc">+</span><span class="dv">1</span>)<span class="sc">*</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>))</span>
+<span id="cb116-29"><a href="onewayANOVA.html#cb116-29" aria-hidden="true" tabindex="-1"></a>  Names_neww <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="dv">2</span><span class="sc">*</span><span class="fu">length</span>(Names))</span>
+<span id="cb116-30"><a href="onewayANOVA.html#cb116-30" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(Names)){</span>
+<span id="cb116-31"><a href="onewayANOVA.html#cb116-31" aria-hidden="true" tabindex="-1"></a>    Names_neww[(i<span class="sc">*</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">-</span><span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">paste0</span>(Names[i],<span class="st">&quot;_n&quot;</span>)</span>
+<span id="cb116-32"><a href="onewayANOVA.html#cb116-32" aria-hidden="true" tabindex="-1"></a>    Names_neww[(i<span class="sc">*</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">-</span><span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">paste0</span>(Names[i],<span class="st">&quot;_mean(SD)&quot;</span>)</span>
+<span id="cb116-33"><a href="onewayANOVA.html#cb116-33" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb116-34"><a href="onewayANOVA.html#cb116-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">names</span>(df3) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Variables&quot;</span>,<span class="st">&quot;Total_n&quot;</span>,<span class="st">&quot;Total_mean(SD)&quot;</span>,Names_neww)</span>
+<span id="cb116-35"><a href="onewayANOVA.html#cb116-35" aria-hidden="true" tabindex="-1"></a>  df3<span class="sc">$</span>Variables <span class="ot">&lt;-</span> var</span>
+<span id="cb116-36"><a href="onewayANOVA.html#cb116-36" aria-hidden="true" tabindex="-1"></a>  df3<span class="sc">$</span>Total_n <span class="ot">&lt;-</span> df2<span class="sc">$</span>Total_n</span>
+<span id="cb116-37"><a href="onewayANOVA.html#cb116-37" aria-hidden="true" tabindex="-1"></a>  df3<span class="sc">$</span><span class="st">`</span><span class="at">Total_mean(SD)</span><span class="st">`</span> <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">round</span>(df2<span class="sc">$</span>Total_mean,digits),<span class="st">&quot;(&quot;</span>,<span class="fu">round</span>(df2<span class="sc">$</span>Total_SD,digits),<span class="st">&quot;)&quot;</span>)</span>
+<span id="cb116-38"><a href="onewayANOVA.html#cb116-38" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(var)){</span>
+<span id="cb116-39"><a href="onewayANOVA.html#cb116-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(Names)){</span>
+<span id="cb116-40"><a href="onewayANOVA.html#cb116-40" aria-hidden="true" tabindex="-1"></a>      df3[i,<span class="fu">which</span>(<span class="fu">names</span>(df3)<span class="sc">==</span>Names_neww[(t<span class="sc">*</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">-</span><span class="dv">2</span>])] <span class="ot">&lt;-</span> df2[i,<span class="fu">which</span>(<span class="fu">names</span>(df2)<span class="sc">==</span>Names_new[(t<span class="sc">*</span><span class="dv">3</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">-</span><span class="dv">3</span>])]</span>
+<span id="cb116-41"><a href="onewayANOVA.html#cb116-41" aria-hidden="true" tabindex="-1"></a>      df3[i,<span class="fu">which</span>(<span class="fu">names</span>(df3)<span class="sc">==</span>Names_neww[(t<span class="sc">*</span><span class="dv">2</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">-</span><span class="dv">1</span>])] <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="fu">round</span>(df2[i,<span class="fu">which</span>(<span class="fu">names</span>(df2)<span class="sc">==</span>Names_new[(t<span class="sc">*</span><span class="dv">3</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">-</span><span class="dv">2</span>])],digits),<span class="st">&quot;(&quot;</span>,<span class="fu">round</span>(df2[i,<span class="fu">which</span>(<span class="fu">names</span>(df2)<span class="sc">==</span>Names_new[(t<span class="sc">*</span><span class="dv">3</span><span class="sc">+</span><span class="dv">1</span>)<span class="sc">-</span><span class="dv">1</span>])],digits),<span class="st">&quot;)&quot;</span>)</span>
+<span id="cb116-42"><a href="onewayANOVA.html#cb116-42" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb116-43"><a href="onewayANOVA.html#cb116-43" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb116-44"><a href="onewayANOVA.html#cb116-44" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb116-45"><a href="onewayANOVA.html#cb116-45" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(Switch){</span>
+<span id="cb116-46"><a href="onewayANOVA.html#cb116-46" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(df2)</span>
+<span id="cb116-47"><a href="onewayANOVA.html#cb116-47" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb116-48"><a href="onewayANOVA.html#cb116-48" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span> <span class="fu">return</span>(df3)</span>
+<span id="cb116-49"><a href="onewayANOVA.html#cb116-49" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb116-50"><a href="onewayANOVA.html#cb116-50" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Now we use the function on the antibio data</p>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="onewayANOVA.html#cb117-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table_func</span>(antibio,<span class="fu">c</span>(<span class="st">&quot;org&quot;</span>), antibio<span class="sc">$</span>type,<span class="at">Switch =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>##   Variables Total_n Total_mean Total_SD Ivermect_n Ivermect_mean Ivermect_SD Alfacyp_n Alfacyp_mean Alfacyp_SD Enroflox_n Enroflox_mean Enroflox_SD Spiramyc_n Spiramyc_mean Spiramyc_SD Fenbenda_n
+## 1       org      34       2.81     0.17          6             3        0.11         6          2.9       0.12          6          2.71        0.16          4          2.86        0.05          6
+##   Fenbenda_mean Fenbenda_SD Control_n Control_mean Control_SD
+## 1          2.83        0.12         6          2.6       0.12</code></pre>
+<p>If switch is set to <code>FALSE</code> the means and SD columns are merged</p>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb119-1"><a href="onewayANOVA.html#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table_func</span>(antibio,<span class="fu">c</span>(<span class="st">&quot;org&quot;</span>), antibio<span class="sc">$</span>type,<span class="at">Switch =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>##   Variables Total_n Total_mean(SD) Ivermect_n Ivermect_mean(SD) Alfacyp_n Alfacyp_mean(SD) Enroflox_n Enroflox_mean(SD) Spiramyc_n Spiramyc_mean(SD) Fenbenda_n Fenbenda_mean(SD) Control_n
+## 1       org      34     2.81(0.17)          6           3(0.11)         6        2.9(0.12)          6        2.71(0.16)          4        2.86(0.05)          6        2.83(0.12)         6
+##   Control_mean(SD)
+## 1        2.6(0.12)</code></pre>
+</div>
+<div id="figures" class="section level3 hasAnchor" number="4.7.2">
+<h3><span class="header-section-number">4.7.2</span> Figures<a href="onewayANOVA.html#figures" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Focus on</p>
+<ul>
+<li>how to polish a figure</li>
+<li>how to save/export a figure</li>
+</ul>
+<p>basic plot</p>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb121-1"><a href="onewayANOVA.html#cb121-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb121-2"><a href="onewayANOVA.html#cb121-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> antibio) <span class="sc">+</span> </span>
+<span id="cb121-3"><a href="onewayANOVA.html#cb121-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> type, <span class="at">y =</span> org))</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/y31-1.png" width="672" /></p>
+<p>With custom labels and title</p>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="onewayANOVA.html#cb122-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> antibio) <span class="sc">+</span> </span>
+<span id="cb122-2"><a href="onewayANOVA.html#cb122-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> type, <span class="at">y =</span> org)) <span class="sc">+</span></span>
+<span id="cb122-3"><a href="onewayANOVA.html#cb122-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Scatterplot of Antibio dataset&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Antibiotic added to feed&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Organic material&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/y32-1.png" width="672" /></p>
+<p>Adding colours to the dots</p>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb123-1"><a href="onewayANOVA.html#cb123-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> antibio) <span class="sc">+</span> </span>
+<span id="cb123-2"><a href="onewayANOVA.html#cb123-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> type, <span class="at">y =</span> org, <span class="at">colour =</span> type)) <span class="sc">+</span> </span>
+<span id="cb123-3"><a href="onewayANOVA.html#cb123-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Scatterplot of Antibio dataset&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Antibiotic added to feed&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Organic material&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/y33-1.png" width="672" /></p>
+<p>Choosing the colours (See <a href="http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/" class="uri">http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/</a> for the colours available, but you can usually just spell the colour you want i.e. “blue” or “red” as done in the example)</p>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="onewayANOVA.html#cb124-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> antibio) <span class="sc">+</span> </span>
+<span id="cb124-2"><a href="onewayANOVA.html#cb124-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> type, <span class="at">y =</span> org, <span class="at">colour =</span> type)) <span class="sc">+</span> </span>
+<span id="cb124-3"><a href="onewayANOVA.html#cb124-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Scatterplot of Antibio dataset&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Antibiotic added to feed&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Organic material&quot;</span>) <span class="sc">+</span></span>
+<span id="cb124-4"><a href="onewayANOVA.html#cb124-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>,<span class="st">&quot;red&quot;</span>,<span class="st">&quot;#330000&quot;</span>,<span class="st">&quot;#00FF33&quot;</span>,<span class="st">&quot;blue&quot;</span>))</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/y34-1.png" width="672" /></p>
+<p>To save/export a figure as a pdf, png or jpeg, one can use this method. The code is the same for all three formats expect the dimensions needs to be changed for the chosen format.</p>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb125-1"><a href="onewayANOVA.html#cb125-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 1: Call the pdf command to start the plot</span></span>
+<span id="cb125-2"><a href="onewayANOVA.html#cb125-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-3"><a href="onewayANOVA.html#cb125-3" aria-hidden="true" tabindex="-1"></a><span class="fu">pdf</span>(<span class="at">file =</span> <span class="st">&quot;~/Desktop/test.pdf&quot;</span>,   <span class="co"># The directory you want to save the file in</span></span>
+<span id="cb125-4"><a href="onewayANOVA.html#cb125-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="dv">10</span>, <span class="co"># The width of the plot in inches</span></span>
+<span id="cb125-5"><a href="onewayANOVA.html#cb125-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">height =</span> <span class="dv">8</span>) <span class="co"># The height of the plot in inches</span></span>
+<span id="cb125-6"><a href="onewayANOVA.html#cb125-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-7"><a href="onewayANOVA.html#cb125-7" aria-hidden="true" tabindex="-1"></a><span class="co"># png(file = &quot;~/Desktop/test.png&quot;,</span></span>
+<span id="cb125-8"><a href="onewayANOVA.html#cb125-8" aria-hidden="true" tabindex="-1"></a><span class="co">#      width = 800,</span></span>
+<span id="cb125-9"><a href="onewayANOVA.html#cb125-9" aria-hidden="true" tabindex="-1"></a><span class="co">#      height = 600)</span></span>
+<span id="cb125-10"><a href="onewayANOVA.html#cb125-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-11"><a href="onewayANOVA.html#cb125-11" aria-hidden="true" tabindex="-1"></a><span class="co"># jpeg(file = &quot;~/Desktop/test.jpeg&quot;,</span></span>
+<span id="cb125-12"><a href="onewayANOVA.html#cb125-12" aria-hidden="true" tabindex="-1"></a><span class="co">#      width = 800,</span></span>
+<span id="cb125-13"><a href="onewayANOVA.html#cb125-13" aria-hidden="true" tabindex="-1"></a><span class="co">#      height = 600)</span></span>
+<span id="cb125-14"><a href="onewayANOVA.html#cb125-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-15"><a href="onewayANOVA.html#cb125-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 2: Create the plot with R code</span></span>
+<span id="cb125-16"><a href="onewayANOVA.html#cb125-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> antibio) <span class="sc">+</span> </span>
+<span id="cb125-17"><a href="onewayANOVA.html#cb125-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x =</span> type, <span class="at">y =</span> org, <span class="at">colour =</span> type)) <span class="sc">+</span> </span>
+<span id="cb125-18"><a href="onewayANOVA.html#cb125-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Scatterplot of Antibio dataset&quot;</span>, <span class="at">x =</span> <span class="st">&quot;Antibiotic added to feed&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Organic material&quot;</span>) <span class="sc">+</span></span>
+<span id="cb125-19"><a href="onewayANOVA.html#cb125-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">&quot;#999999&quot;</span>, <span class="st">&quot;#E69F00&quot;</span>, <span class="st">&quot;#56B4E9&quot;</span>,<span class="st">&quot;red&quot;</span>,<span class="st">&quot;#330000&quot;</span>,<span class="st">&quot;#00FF33&quot;</span>,<span class="st">&quot;blue&quot;</span>))</span>
+<span id="cb125-20"><a href="onewayANOVA.html#cb125-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb125-21"><a href="onewayANOVA.html#cb125-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Step 3: Run dev.off() to create the file!</span></span>
+<span id="cb125-22"><a href="onewayANOVA.html#cb125-22" aria-hidden="true" tabindex="-1"></a><span class="fu">dev.off</span>()</span></code></pre></div>
+</div>
+<div id="stat-methods-section" class="section level3 hasAnchor" number="4.7.3">
+<h3><span class="header-section-number">4.7.3</span> Stat methods section<a href="onewayANOVA.html#stat-methods-section" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>How to write a stat methods section: list a couple of papers reporting results of a simple and clean analysis using one way ANOVA.</p>
+<p>Possibly a list that can be updated continuously.</p>
+</div>
+</div>
+<div id="alternatives-and-related-statistical-methods" class="section level2 hasAnchor" number="4.8">
+<h2><span class="header-section-number">4.8</span> Alternatives and related statistical methods<a href="onewayANOVA.html#alternatives-and-related-statistical-methods" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="logtrans" class="section level3 hasAnchor" number="4.8.1">
+<h3><span class="header-section-number">4.8.1</span> Analysis on logtransformed scale<a href="onewayANOVA.html#logtrans" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li><p>Interpretation/backtransformation (summary + emmeans). Comment about difference.</p></li>
+<li><p>Tests not assuming equal variances (spec: welch test) as alternative to using other transformations.</p></li>
+<li><p>Handling of zeroes: zero-inflated models, detection limits, subtracting a baseline</p></li>
+</ul>
+</div>
+<div id="onewaynonpar" class="section level3 hasAnchor" number="4.8.2">
+<h3><span class="header-section-number">4.8.2</span> Relation to t-tests and non-parametric testing<a href="onewayANOVA.html#onewaynonpar" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li><p>Two groups: t-test / Mann-Whitney, levene-test</p></li>
+<li><p>More groups: Wilcoxon-test</p></li>
+</ul>
+</div>
+<div id="bootstrap" class="section level3 hasAnchor" number="4.8.3">
+<h3><span class="header-section-number">4.8.3</span> When data are not normally distributed<a href="onewayANOVA.html#bootstrap" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Non-parametric bootstrap of estimates, std. errors, CI, test-statistics.</p>
+<p>Show code that compares results of summary with non-parametric bootstrap.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="model-validation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="poisson-regression.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/HjalteSoeberg/DataLab_StudCons/edit/main/onewayANOVA.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/HjalteSoeberg/DataLab_StudCons/blob/main/onewayANOVA.Rmd",
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -6,3 +6,6 @@ view: https://github.com/HjalteSoeberg/DataLab_StudCons/blob/main/%s
 language:
   ui:
     chapter_name: "Chapter "
+output:
+  html_document:
+    theme: flatly

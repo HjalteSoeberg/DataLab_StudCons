@@ -57,6 +57,7 @@ library(tidyverse)
 antibio_long <- pivot_longer(antibio_wide, cols = 1:6, names_to = "type", values_to = "org")
 head(antibio_long)
 ```
+
 Now the data is in the *long format*. However. if we look at a summary of the data
 
 ```{r y6}
@@ -223,6 +224,7 @@ We must basically just check that observations within each group looks like an (
 library(tidyverse)
 summarise(group_by(antibio, type), mean_org = mean(org), sd_org = sd(org))
 ```
+
 Here the sd_org should be approximately the same, if we want to use one-way-ANOVA
 
 
@@ -277,6 +279,7 @@ qqline(antibio$org[which(antibio$type==types[6])], col = "steelblue", lwd = 2)}
 library(tidyverse)
 summarise(group_by(dogs, race), mean_maxLA = mean(maxLA), sd_maxLA = sd(maxLA))
 ```
+
 Here the standard deviation between the groups varies alot, which means one-way-ANOVA is not the right method to use.
 
 
@@ -398,6 +401,7 @@ Now we use the function on the antibio data
 ```{r y29}
 table_func(antibio,c("org"), antibio$type,Switch = TRUE)
 ```
+
 If switch is set to `FALSE` the means and SD columns are merged
 ```{r y30}
 table_func(antibio,c("org"), antibio$type,Switch = FALSE)

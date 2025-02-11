@@ -78,6 +78,7 @@ ggplot(beetle,aes(x=dose,y=dead/number)) + geom_point() + geom_smooth(method="lm
   xlab("log10(CS2 mg/l)") + ylab("Proportion of dead beetles") +
   theme_light()
 ```
+
 Note: If we trust this linear regression blindly we could be inclined to think that given a dosage of 2 log10(CS2 mg/L) we would get a proportion of dead beetles which exceeds 1. This of course doesn't make sense and is why we need another method than just simple linear regression.
 
 
@@ -89,6 +90,7 @@ We fit the model using the `glm()` function, and as a response variable we use t
 ```{r b5}
 cbind(beetle$dead,beetle$number-beetle$dead)
 ```
+
 Where the first column is the number of beetles that died and the second is number of beetles still alive, given the dosage of carbon-disulfide.
 
 
@@ -98,6 +100,7 @@ m1 <- glm(cbind(dead,number-dead)~dose,data=beetle,family=binomial(link="logit")
 
 summary(m1)
 ```
+
 In the summary we can see that the dosage of CS2 i very significant. From the summary we also get the estimates of the coefficients in the logit function, i.e. our model estimates the logit function to be:
 $y=\frac{\exp(-60.717+34.27*dose)}{1+\exp(-60.717+34.27*dose)}$, where y is the probability of the beetles dying.
 
@@ -136,6 +139,7 @@ To check assumption two we can do a residual plot just like in normal linear reg
 ```{r b8}
 plot(m1, which = 1)
 ```
+
 This residual plot is impossible to interpret as there is too few data points.
 
 
@@ -143,6 +147,7 @@ A better way to check assumption two is to simulate the cumulative sum of the re
 ```{r b9}
 plot(cumres(m1))
 ```
+
 Here the null-hypothesis is that the model is correct, which means that the test suggests that the model is false as the p-value is 0.009-0.011.
 
 
@@ -154,6 +159,7 @@ To do an hypothesis for the binary logistic regression, we use the function `dro
 ```{r b10}
 drop1(m1, test="Chisq")
 ```
+
 Here we see our explanatory variable `dose` is statistically significant and we can therefore reject the null, i.e. this test suggests that dosage of CS2 do impact whether the beetles live or die, under the assumption that the model is true.
 
 
@@ -166,6 +172,7 @@ If we are interested in the estimated mean probability of beetles dying given th
 m <- emmeans(m1, ~ dose, test = "F")
 m
 ```
+
 Here we see that given the mean dosage of carbon-disulfide we expect the beetles to die with a probability of 0.744.
 
 
@@ -228,6 +235,7 @@ m2 <- glm(diabetes~., family = binomial(link="logit"),data = newdata)
 
 summary(m2)
 ```
+
 For every one unit increase in `glucose`, the log odds of being diabetic ‘pos’(versus being diabetic ‘neg’) increases by 0.039.
 Similarly, for one unit increase in `pressure`, the log odds of being diabetic ‘pos’(versus being diabetic ‘neg’) decreases by 0.0045.
 
@@ -260,6 +268,7 @@ levelplot(cp[ord, ord],
                         cex = 1.2)
           )
 ```
+
 Here we see that `insulin` and `glucose` as well as `mass` and `triceps` are heavily correlated, and we could think about removing some of them. This will however not be done here
 
 
@@ -267,6 +276,7 @@ To check assumption 2, we again make a residual plot:
 ```{r b18}
 plot(m2, 1)
 ```
+
 Here we can see that the residuals clearly have a pattern, and we can see that there are a couple of outliers, but it is hard to say anything about whether or not the observations are independent.
 
 
@@ -274,6 +284,7 @@ To check this we again simulate the cumulative sum of the residual process:
 ```{r b19}
 plot(cumres(m2))
 ```
+
 Here the null-hypothesis is that the model is correct, which means that the test suggests that the model is correct as the p-value is 0.596-0.68. Looking at the p-values for the individual variables it also looks really good except for `mass` and `insulin`.
 
 

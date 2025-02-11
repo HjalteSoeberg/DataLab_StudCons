@@ -19,6 +19,7 @@ A two-way ANOVA is used to estimate how the mean of a quantitative variable chan
 df <- read.table("data/3_1_roser.txt", header = TRUE, sep = "", dec = ".", colClasses = c(rep("factor",4),"numeric"))
 print(as_tibble(df))
 ``` 
+
 As this chapter is about two-way-ANOVA we will only look at two categorial variables and a responsvariable. For this data our respons variable is `time` and we choose `florist` and `customer` as our explanatory variables.
 
 ```{r x3}
@@ -42,6 +43,7 @@ We can see that `florist` and `customer` are both factor variables taking either
 
 
 ## Data exploration
+
 It is convenient to compute summarizes of the outcome divided by the factors:
 ```{r x6}
 sum_customer <- df %>% 
@@ -69,6 +71,7 @@ sum_florist <- df %>%
     median_time = median(time))
 sum_florist
 ```
+
 This table suggests that applying fertilizer at the florist has a possitive effective on the lifespan of the roses.
 
 We can also create a table of the combinations of the categorial variables to see if there is a possible interaction effect:
@@ -83,6 +86,7 @@ sum_df <- df %>%
   )
 sum_df
 ```
+
 This table suggest that applying fertilizer at both the florist and the costumer simultaniously has a large possitive effect on the lifespan of the roses, i.e. it suggests there is an interaction effect.
 
 ```{r x9}
@@ -164,6 +168,7 @@ Doing a drop1 test on our models we can see which terms in the model are conside
 ```{r x14}
 drop1(m1_interaction, test = "F")
 ```
+
 Here we see that florist and customer are significant terms while the interaction between the two is not significant. 
 
 
@@ -210,6 +215,7 @@ For the assumption to be fulfilled the dots need to follow the dotted line.
 
 
 ## Hypothesis test
+
 To do the two-way-ANOVA we need our fitted model and then do the test using `joint_tests()`.
 
 
@@ -243,6 +249,7 @@ Now we want to compare the estimated means between values of the factor variable
 ```{r x22}
 m %>% pairs(simple = "florist")
 ```
+
 Here we see that the mean for Florist = 0 is not significantly different from the mean for Florist = 1 when Customer = 0, but they are significantly different when customer is 1.
 
 
@@ -251,6 +258,7 @@ Here we see that the mean for Florist = 0 is not significantly different from th
 ```{r x23}
 m %>% pairs(simple = "customer")
 ```
+
 Here we see that the mean for Customer = 0 is not significantly different from the mean for Customer = 1 when Florist = 0, but they are significantly different when Florist is 1.
 
 
@@ -260,6 +268,7 @@ m %>%
   pairs(simple = "florist") %>% ## Order of florist and customer does not matter
   pairs(simple = "customer",by = NULL)
 ```
+
 Here we see that that the interaction effect is not significant.
 
 
@@ -267,11 +276,13 @@ Here we see that that the interaction effect is not significant.
 ## Writing article/report
 
 ### How to write method section
+
 In a method section one should clearly state the methods used to produce the results presented in the paper, such that anyone reading the paper can reproduce the result given the same data. Here is an example:
 
 To test whether applying fertilizer to the roses at the florist or the customer, has an effect on their lifespan, we have choosen to do a two-way-ANOVA test. This will also be done on their interaction effect to see if applying fertilizer both places has a bigger effect.
 
 ### How to write results section
+
 Doing the two-way-ANOVA test we find that both `florist` and `customer` are significant, while their interaction is not, meaning, based on the test, that there is a significant difference on whether you apply or don't apply fertilizer at the florist or at the customer, and no significant difference between applying it at both at the same time.
 
 

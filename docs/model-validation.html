@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 3 Model Validation | A short introduction to common statistical data analysis techniques</title>
+  <meta name="description" content="Chapter 3 Model Validation | A short introduction to common statistical data analysis techniques" />
+  <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 3 Model Validation | A short introduction to common statistical data analysis techniques" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 3 Model Validation | A short introduction to common statistical data analysis techniques" />
+  
+  
+  
+
+<meta name="author" content="Data Science Lab, University of Copenhagen" />
+
+
+<meta name="date" content="2025-02-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="linear-regression.html"/>
+<link rel="next" href="onewayANOVA.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About this document</a></li>
+<li class="chapter" data-level="1" data-path="binreg.html"><a href="binreg.html"><i class="fa fa-check"></i><b>1</b> Binary Regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="binreg.html"><a href="binreg.html#when-to-use-this-model"><i class="fa fa-check"></i><b>1.1</b> When to use this model?</a></li>
+<li class="chapter" data-level="1.2" data-path="binreg.html"><a href="binreg.html#description-of-the-model"><i class="fa fa-check"></i><b>1.2</b> Description of the Model</a></li>
+<li class="chapter" data-level="1.3" data-path="binreg.html"><a href="binreg.html#similarities-to-the-chi-squared-test"><i class="fa fa-check"></i><b>1.3</b> similarities to the chi-squared test</a></li>
+<li class="chapter" data-level="1.4" data-path="binreg.html"><a href="binreg.html#example-1-simple-example-but-bad-model-fit"><i class="fa fa-check"></i><b>1.4</b> Example 1: Simple example but bad model fit</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="binreg.html"><a href="binreg.html#organizing-data"><i class="fa fa-check"></i><b>1.4.1</b> Organizing data</a></li>
+<li class="chapter" data-level="1.4.2" data-path="binreg.html"><a href="binreg.html#fitting-model"><i class="fa fa-check"></i><b>1.4.2</b> Fitting Model</a></li>
+<li class="chapter" data-level="1.4.3" data-path="binreg.html"><a href="binreg.html#model-validering-via-gof-pakken.-gerne-via-kkholst-på-github."><i class="fa fa-check"></i><b>1.4.3</b> Model validering via gof-pakken. Gerne via kkholst på github.</a></li>
+<li class="chapter" data-level="1.4.4" data-path="binreg.html"><a href="binreg.html#hypothesis-test"><i class="fa fa-check"></i><b>1.4.4</b> Hypothesis test</a></li>
+<li class="chapter" data-level="1.4.5" data-path="binreg.html"><a href="binreg.html#parameter-estimates-with-emmeans."><i class="fa fa-check"></i><b>1.4.5</b> Parameter estimates with emmeans.</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="binreg.html"><a href="binreg.html#example-2-multiple-variables-and-correct-model-fit"><i class="fa fa-check"></i><b>1.5</b> Example 2: Multiple variables and correct model fit</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="binreg.html"><a href="binreg.html#organizing-data-1"><i class="fa fa-check"></i><b>1.5.1</b> Organizing data</a></li>
+<li class="chapter" data-level="1.5.2" data-path="binreg.html"><a href="binreg.html#fitting-model-1"><i class="fa fa-check"></i><b>1.5.2</b> Fitting Model</a></li>
+<li class="chapter" data-level="1.5.3" data-path="binreg.html"><a href="binreg.html#model-validering-via-gof-pakken.-gerne-via-kkholst-på-github.-1"><i class="fa fa-check"></i><b>1.5.3</b> Model validering via gof-pakken. Gerne via kkholst på github.</a></li>
+<li class="chapter" data-level="1.5.4" data-path="binreg.html"><a href="binreg.html#hypothesis-test-1"><i class="fa fa-check"></i><b>1.5.4</b> Hypothesis test</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear regression</a></li>
+<li class="chapter" data-level="3" data-path="model-validation.html"><a href="model-validation.html"><i class="fa fa-check"></i><b>3</b> Model Validation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="model-validation.html"><a href="model-validation.html#why-and-how"><i class="fa fa-check"></i><b>3.1</b> Why and How</a></li>
+<li class="chapter" data-level="3.2" data-path="model-validation.html"><a href="model-validation.html#sample-size-of-one"><i class="fa fa-check"></i><b>3.2</b> Sample size of one</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="model-validation.html"><a href="model-validation.html#data-example-1-weight-of-crabs"><i class="fa fa-check"></i><b>3.2.1</b> Data Example 1: Weight of Crabs</a></li>
+<li class="chapter" data-level="3.2.2" data-path="model-validation.html"><a href="model-validation.html#data-example-2-salary-data-from-connecticut---log-transformation"><i class="fa fa-check"></i><b>3.2.2</b> Data Example 2: Salary Data from Connecticut - log transformation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="model-validation.html"><a href="model-validation.html#sample-size-of-two"><i class="fa fa-check"></i><b>3.3</b> Sample size of two</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="model-validation.html"><a href="model-validation.html#simulated-data-example"><i class="fa fa-check"></i><b>3.3.1</b> Simulated data example</a></li>
+<li class="chapter" data-level="3.3.2" data-path="model-validation.html"><a href="model-validation.html#data-example-3-lean-body-mass-and-physical-strength-for-men-and-women"><i class="fa fa-check"></i><b>3.3.2</b> Data Example 3: Lean body mass and physical strength for men and women</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="model-validation.html"><a href="model-validation.html#linear-nomral-models-regression-anova-ancova"><i class="fa fa-check"></i><b>3.4</b> Linear nomral models (regression, ANOVA, ANCOVA)</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="model-validation.html"><a href="model-validation.html#data-example-4-pillbugs-oneway-anova"><i class="fa fa-check"></i><b>3.4.1</b> Data Example 4: pillbugs (oneway ANOVA)</a></li>
+<li class="chapter" data-level="3.4.2" data-path="model-validation.html"><a href="model-validation.html#data-example-5-lean-body-mass-and-physical-strength-for-men-and-women-continued"><i class="fa fa-check"></i><b>3.4.2</b> Data Example 5: Lean body mass and physical strength for men and women (continued)</a></li>
+<li class="chapter" data-level="3.4.3" data-path="model-validation.html"><a href="model-validation.html#data-example-5-birthwt"><i class="fa fa-check"></i><b>3.4.3</b> Data Example 5: birthwt</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="model-validation.html"><a href="model-validation.html#miscellaneous"><i class="fa fa-check"></i><b>3.5</b> Miscellaneous</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="model-validation.html"><a href="model-validation.html#intepretation-of-results-when-transforming"><i class="fa fa-check"></i><b>3.5.1</b> Intepretation of results when transforming</a></li>
+<li class="chapter" data-level="3.5.2" data-path="model-validation.html"><a href="model-validation.html#boxcox"><i class="fa fa-check"></i><b>3.5.2</b> Boxcox</a></li>
+<li class="chapter" data-level="3.5.3" data-path="model-validation.html"><a href="model-validation.html#shapiro-wilk-hypothesis-test-for-normality"><i class="fa fa-check"></i><b>3.5.3</b> Shapiro Wilk hypothesis test for normality</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="onewayANOVA.html"><a href="onewayANOVA.html"><i class="fa fa-check"></i><b>4</b> One-way analysis of variance</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#when-to-use-this-model-1"><i class="fa fa-check"></i><b>4.1</b> When to use this model?</a></li>
+<li class="chapter" data-level="4.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#organisation-of-data-and-data-import"><i class="fa fa-check"></i><b>4.2</b> Organisation of data and data import</a></li>
+<li class="chapter" data-level="4.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#data-exploration"><i class="fa fa-check"></i><b>4.3</b> Data exploration</a></li>
+<li class="chapter" data-level="4.4" data-path="onewayANOVA.html"><a href="onewayANOVA.html#fitting-the-model"><i class="fa fa-check"></i><b>4.4</b> Fitting the model</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#with-default-reference-group"><i class="fa fa-check"></i><b>4.4.1</b> … with default reference group</a></li>
+<li class="chapter" data-level="4.4.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#without-a-reference-group"><i class="fa fa-check"></i><b>4.4.2</b> .. without a reference group</a></li>
+<li class="chapter" data-level="4.4.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#with-user-defined-reference-group"><i class="fa fa-check"></i><b>4.4.3</b> … with user defined reference group</a></li>
+<li class="chapter" data-level="4.4.4" data-path="onewayANOVA.html"><a href="onewayANOVA.html#digging-more-into-the-output-from-summary"><i class="fa fa-check"></i><b>4.4.4</b> Digging more into the output from <code>summary()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="onewayANOVA.html"><a href="onewayANOVA.html#validating-the-model"><i class="fa fa-check"></i><b>4.5</b> Validating the model</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#why-do-i-need-to-valide-the-model"><i class="fa fa-check"></i><b>4.5.1</b> Why do I need to valide the model?</a></li>
+<li class="chapter" data-level="4.5.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#how-do-i-validate-the-model-assumptions"><i class="fa fa-check"></i><b>4.5.2</b> How do I validate the model assumptions?</a></li>
+<li class="chapter" data-level="4.5.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#what-to-do-if-the-model-is-not-valid"><i class="fa fa-check"></i><b>4.5.3</b> What to do if the model is not valid?</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="onewayANOVA.html"><a href="onewayANOVA.html#extracting-estimates-with-emmeans"><i class="fa fa-check"></i><b>4.6</b> Extracting estimates with <code>emmeans()</code></a></li>
+<li class="chapter" data-level="4.7" data-path="onewayANOVA.html"><a href="onewayANOVA.html#reporting-the-results"><i class="fa fa-check"></i><b>4.7</b> Reporting the results</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#tables"><i class="fa fa-check"></i><b>4.7.1</b> Tables</a></li>
+<li class="chapter" data-level="4.7.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#figures"><i class="fa fa-check"></i><b>4.7.2</b> Figures</a></li>
+<li class="chapter" data-level="4.7.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#stat-methods-section"><i class="fa fa-check"></i><b>4.7.3</b> Stat methods section</a></li>
+</ul></li>
+<li class="chapter" data-level="4.8" data-path="onewayANOVA.html"><a href="onewayANOVA.html#alternatives-and-related-statistical-methods"><i class="fa fa-check"></i><b>4.8</b> Alternatives and related statistical methods</a>
+<ul>
+<li class="chapter" data-level="4.8.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#logtrans"><i class="fa fa-check"></i><b>4.8.1</b> Analysis on logtransformed scale</a></li>
+<li class="chapter" data-level="4.8.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#onewaynonpar"><i class="fa fa-check"></i><b>4.8.2</b> Relation to t-tests and non-parametric testing</a></li>
+<li class="chapter" data-level="4.8.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#bootstrap"><i class="fa fa-check"></i><b>4.8.3</b> When data are not normally distributed</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="poisson-regression.html"><a href="poisson-regression.html"><i class="fa fa-check"></i><b>5</b> Poisson regression</a></li>
+<li class="chapter" data-level="6" data-path="mixedmodels.html"><a href="mixedmodels.html"><i class="fa fa-check"></i><b>6</b> Analysis of repeated measures</a></li>
+<li class="chapter" data-level="7" data-path="twowayANOVA.html"><a href="twowayANOVA.html"><i class="fa fa-check"></i><b>7</b> Two-way analysis of variance</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="twowayANOVA.html"><a href="twowayANOVA.html#when-to-use-this-model-2"><i class="fa fa-check"></i><b>7.1</b> When to use this model?</a></li>
+<li class="chapter" data-level="7.2" data-path="twowayANOVA.html"><a href="twowayANOVA.html#organizing-data-2"><i class="fa fa-check"></i><b>7.2</b> Organizing data</a></li>
+<li class="chapter" data-level="7.3" data-path="twowayANOVA.html"><a href="twowayANOVA.html#data-exploration-1"><i class="fa fa-check"></i><b>7.3</b> Data exploration</a></li>
+<li class="chapter" data-level="7.4" data-path="twowayANOVA.html"><a href="twowayANOVA.html#fitting-model-2"><i class="fa fa-check"></i><b>7.4</b> Fitting model</a></li>
+<li class="chapter" data-level="7.5" data-path="twowayANOVA.html"><a href="twowayANOVA.html#validating-the-model-1"><i class="fa fa-check"></i><b>7.5</b> Validating the model</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="twowayANOVA.html"><a href="twowayANOVA.html#why-do-i-need-to-valide-the-model-1"><i class="fa fa-check"></i><b>7.5.1</b> Why do I need to valide the model?</a></li>
+<li class="chapter" data-level="7.5.2" data-path="twowayANOVA.html"><a href="twowayANOVA.html#how-do-i-validate-the-model-assumptions-1"><i class="fa fa-check"></i><b>7.5.2</b> How do I validate the model assumptions?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="twowayANOVA.html"><a href="twowayANOVA.html#hypothesis-test-2"><i class="fa fa-check"></i><b>7.6</b> Hypothesis test</a></li>
+<li class="chapter" data-level="7.7" data-path="twowayANOVA.html"><a href="twowayANOVA.html#extracting-estimates-with-emmeans-1"><i class="fa fa-check"></i><b>7.7</b> Extracting estimates with <code>emmeans()</code></a></li>
+<li class="chapter" data-level="7.8" data-path="twowayANOVA.html"><a href="twowayANOVA.html#writing-articlereport"><i class="fa fa-check"></i><b>7.8</b> Writing article/report</a>
+<ul>
+<li class="chapter" data-level="7.8.1" data-path="twowayANOVA.html"><a href="twowayANOVA.html#how-to-write-method-section"><i class="fa fa-check"></i><b>7.8.1</b> How to write method section</a></li>
+<li class="chapter" data-level="7.8.2" data-path="twowayANOVA.html"><a href="twowayANOVA.html#how-to-write-results-section"><i class="fa fa-check"></i><b>7.8.2</b> How to write results section</a></li>
+</ul></li>
+<li class="chapter" data-level="7.9" data-path="twowayANOVA.html"><a href="twowayANOVA.html#miscellaneous-1"><i class="fa fa-check"></i><b>7.9</b> Miscellaneous</a>
+<ul>
+<li class="chapter" data-level="7.9.1" data-path="twowayANOVA.html"><a href="twowayANOVA.html#why-to-not-use-anova-tables"><i class="fa fa-check"></i><b>7.9.1</b> Why to not use ANOVA tables</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A short introduction to common statistical data analysis techniques</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="model-validation" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">Chapter 3</span> Model Validation<a href="model-validation.html#model-validation" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>En del af datasættene er taget fra isdals-pakken, som hører til den lilla bog (isdals = Introduction to Statistical Data Analysis for the Life Sciences).</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="model-validation.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb32-2"><a href="model-validation.html#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(isdals)</span>
+<span id="cb32-3"><a href="model-validation.html#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb32-4"><a href="model-validation.html#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">435</span>)</span></code></pre></div>
+<div id="why-and-how" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> Why and How<a href="model-validation.html#why-and-how" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Most statistical methodology is based on certain assumption, that needs to be fulfilled, otherwise those methods won’t produce valid results. It is therefor very important to check if the assumptions are fulfilled by the model, which is why we do model validation.</p>
+<p>The most common assumption to check is if the data is normally distributed. To do this we usually do a QQ-plot of the data, to see if the quantiles follows that of a normal distribution. When working with more complex models it can be necassry to do model validation on the residuals of the model, instead of on the raw data. This is because there has been made asumptions based onthe residuals on not directly on the raw data.</p>
+</div>
+<div id="sample-size-of-one" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Sample size of one<a href="model-validation.html#sample-size-of-one" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>When dealing with data that is of sample size one, it is important to check whether the data is (approxymately)-normally distributed. The most common way of doing this is by doing a QQ-plot. In this plot the quantiles of the data needs to lie approximately on the theoretical quantiles of a normal distribution. If the dataset is large, the normality assumptioon can also be checked using a histogram of the data, to see if the histogram matches a normal ditribution. The QQ-plot is generally more reliable.</p>
+<p>The Shaprio-Wilk can also be used as a formal test for normality, but we would still recommend looking at a QQ-plot of the data to get a better picture of the outcome of the test (the data can still be normally ditributed even if the Shapiro-Wilk test says otherwise and vice-versa).</p>
+<div id="data-example-1-weight-of-crabs" class="section level3 hasAnchor" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Data Example 1: Weight of Crabs<a href="model-validation.html#data-example-1-weight-of-crabs" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In this data example we look at the weight, in grams, of 162 crabs at a certain age. Here we want to check if the weight data is normally distributed.</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="model-validation.html#cb33-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">data</span>(crabs, <span class="at">package=</span><span class="st">&quot;isdals&quot;</span>)</span>
+<span id="cb33-2"><a href="model-validation.html#cb33-2" aria-hidden="true" tabindex="-1"></a>    dat1 <span class="ot">&lt;-</span> crabs <span class="sc">%&gt;%</span> <span class="fu">filter</span>(day<span class="sc">==</span><span class="dv">1</span>)</span></code></pre></div>
+<p>Histogram of the crab weight data with the curve for a normal distribution with mean 12.76 and standard deviation 2.25</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="model-validation.html#cb34-1" aria-hidden="true" tabindex="-1"></a>dat1<span class="sc">$</span>wgt <span class="sc">%&gt;%</span> </span>
+<span id="cb34-2"><a href="model-validation.html#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">hist</span>(<span class="at">density=</span><span class="dv">20</span>, <span class="at">breaks=</span><span class="dv">10</span>, <span class="at">prob=</span><span class="cn">TRUE</span>, </span>
+<span id="cb34-3"><a href="model-validation.html#cb34-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;Weight&quot;</span>, <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.2</span>), </span>
+<span id="cb34-4"><a href="model-validation.html#cb34-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">&quot;Crab weight histogram&quot;</span>)</span>
+<span id="cb34-5"><a href="model-validation.html#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dnorm</span>(x, <span class="at">mean=</span><span class="fu">mean</span>(dat1<span class="sc">$</span>wgt), <span class="at">sd=</span><span class="fu">sqrt</span>(<span class="fu">var</span>(dat1<span class="sc">$</span>wgt))), </span>
+<span id="cb34-6"><a href="model-validation.html#cb34-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">col=</span><span class="st">&quot;black&quot;</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">yaxt=</span><span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z3-1.png" width="672" /></p>
+<p>Based on the histogram the crab weight data looks to be normally distributed.</p>
+<p>QQ-plot of the crab weight data with a dotted line representing the true normally distributed values.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="model-validation.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(dat1<span class="sc">$</span>wgt)</span>
+<span id="cb35-2"><a href="model-validation.html#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(dat1<span class="sc">$</span>wgt, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z4-1.png" width="672" /></p>
+<p>The QQ-plot also indicate that the crab weight data is normally distributed.</p>
+</div>
+<div id="data-example-2-salary-data-from-connecticut---log-transformation" class="section level3 hasAnchor" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Data Example 2: Salary Data from Connecticut - log transformation<a href="model-validation.html#data-example-2-salary-data-from-connecticut---log-transformation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Here we look at the salary of employees in the public sector in Connecticut. This data needs to be log transformed to be normal.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="model-validation.html#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;data/4_2_connecticut2017.Rdata&quot;</span>)</span></code></pre></div>
+<p>Histogram of the salary data with the curve for a normal distribution with mean 85577.22 and standard deviation 32813.17</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="model-validation.html#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(paydata2017<span class="sc">$</span>Pay, <span class="at">density=</span><span class="dv">20</span>, <span class="at">breaks=</span><span class="dv">20</span>, <span class="at">prob=</span><span class="cn">TRUE</span>, </span>
+<span id="cb37-2"><a href="model-validation.html#cb37-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;Salary&quot;</span>, </span>
+<span id="cb37-3"><a href="model-validation.html#cb37-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">&quot;Salary histogram&quot;</span>)</span>
+<span id="cb37-4"><a href="model-validation.html#cb37-4" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dnorm</span>(x, <span class="at">mean=</span><span class="fu">mean</span>(paydata2017<span class="sc">$</span>Pay), <span class="at">sd=</span><span class="fu">sqrt</span>(<span class="fu">var</span>(paydata2017<span class="sc">$</span>Pay))), </span>
+<span id="cb37-5"><a href="model-validation.html#cb37-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">col=</span><span class="st">&quot;black&quot;</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">yaxt=</span><span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z6-1.png" width="672" /></p>
+<p>Here we can see that the mean of the data looks off compared to the true normal distribution, and the data has a long tail for the high values, i.e. the data doesnt look normally ditributed.</p>
+<p>QQ-plot of the salary data with a dotted line representing the true normally distributed values.</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="model-validation.html#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(paydata2017<span class="sc">$</span>Pay)</span>
+<span id="cb38-2"><a href="model-validation.html#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(paydata2017<span class="sc">$</span>Pay, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z7-1.png" width="672" /></p>
+<p>As the quantiles of the data are heavily curved and doesnt follow the dotted line, the data is not normally distributed.</p>
+<p>Now we will log-transform the salary data and check if this new transformed variable is normally distributed.</p>
+<p>Histogram of the log-transformed salary data with the curve for a normal distribution with mean 11.29 and standard deviation 0.35</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="model-validation.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">log</span>(paydata2017<span class="sc">$</span>Pay), </span>
+<span id="cb39-2"><a href="model-validation.html#cb39-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">density=</span><span class="dv">20</span>, <span class="at">breaks=</span><span class="dv">20</span>, <span class="at">prob=</span><span class="cn">TRUE</span>, </span>
+<span id="cb39-3"><a href="model-validation.html#cb39-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab=</span><span class="st">&quot;Salary&quot;</span>, </span>
+<span id="cb39-4"><a href="model-validation.html#cb39-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">&quot;Salary histogram (log-transformed)&quot;</span>)</span>
+<span id="cb39-5"><a href="model-validation.html#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dnorm</span>(x, <span class="at">mean=</span><span class="fu">mean</span>(<span class="fu">log</span>(paydata2017<span class="sc">$</span>Pay)), <span class="at">sd=</span><span class="fu">sqrt</span>(<span class="fu">var</span>(<span class="fu">log</span>(paydata2017<span class="sc">$</span>Pay)))), </span>
+<span id="cb39-6"><a href="model-validation.html#cb39-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">col=</span><span class="st">&quot;black&quot;</span>, <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">yaxt=</span><span class="st">&quot;n&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z8-1.png" width="672" /></p>
+<p>Here we see the histrogram fits nicely to the bell curve.</p>
+<p>QQ-plot of the salary data with a dotted line representing the true normally distributed values.</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="model-validation.html#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">log</span>(paydata2017<span class="sc">$</span>Pay))</span>
+<span id="cb40-2"><a href="model-validation.html#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">log</span>(paydata2017<span class="sc">$</span>Pay), <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z9-1.png" width="672" /></p>
+<p>The quantiles of the data follows the theoretical dotted line nicely, which strongly indicates that the log-transformed data is normal.</p>
+</div>
+</div>
+<div id="sample-size-of-two" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> Sample size of two<a href="model-validation.html#sample-size-of-two" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Now we will look at data that is of sample size two. Here we don’t check if the full data is normal but instead check whether each individual sample is normally distributed.</p>
+<p>The typical analysis in this scenario is to either use the t-test or the Welch t-test. When using the t-test we assume the variance of the two populations are equal. This can be checked by fitting a linear model on the data and looking at the residual plot (this is shown in data example 4). If we don’t assume the variances are equal then we can use the Welch t-test.</p>
+<div id="simulated-data-example" class="section level3 hasAnchor" number="3.3.1">
+<h3><span class="header-section-number">3.3.1</span> Simulated data example<a href="model-validation.html#simulated-data-example" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In this example we will simulate data for two groups: treat = 0 and treat = 1. The first group will be normally distributed with mean 0 and sd 1, and the second group will also be normally distributed with same sd but with mean 4.</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="model-validation.html#cb41-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, <span class="dv">0</span>,<span class="dv">1</span>)</span>
+<span id="cb41-2"><a href="model-validation.html#cb41-2" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, <span class="dv">4</span>,<span class="dv">1</span>)</span>
+<span id="cb41-3"><a href="model-validation.html#cb41-3" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">treat=</span><span class="fu">rep</span>(<span class="st">&quot;0&quot;</span>,<span class="dv">50</span>),<span class="at">value=</span>x)</span>
+<span id="cb41-4"><a href="model-validation.html#cb41-4" aria-hidden="true" tabindex="-1"></a>Y <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">treat=</span><span class="fu">rep</span>(<span class="st">&quot;1&quot;</span>,<span class="dv">50</span>),<span class="at">value=</span>y)</span>
+<span id="cb41-5"><a href="model-validation.html#cb41-5" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">rbind</span>(X,Y)</span></code></pre></div>
+<p>First we will do a QQ-plot of all the data:</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="model-validation.html#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(df<span class="sc">$</span>value)</span>
+<span id="cb42-2"><a href="model-validation.html#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(df<span class="sc">$</span>value, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z11-1.png" width="672" /></p>
+<p>Here we can see that the data is not normally distributed.</p>
+<p>Now we will do a QQ-plot of the data for each group:</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="model-validation.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(df<span class="sc">$</span>value[<span class="fu">which</span>(df<span class="sc">$</span>treat<span class="sc">==</span><span class="st">&quot;0&quot;</span>)])</span>
+<span id="cb43-2"><a href="model-validation.html#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(df<span class="sc">$</span>value[<span class="fu">which</span>(df<span class="sc">$</span>treat<span class="sc">==</span><span class="st">&quot;0&quot;</span>)], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z12-1.png" width="672" /></p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="model-validation.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(df<span class="sc">$</span>value[<span class="fu">which</span>(df<span class="sc">$</span>treat<span class="sc">==</span><span class="st">&quot;1&quot;</span>)])</span>
+<span id="cb44-2"><a href="model-validation.html#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(df<span class="sc">$</span>value[<span class="fu">which</span>(df<span class="sc">$</span>treat<span class="sc">==</span><span class="st">&quot;1&quot;</span>)], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z13-1.png" width="672" /></p>
+<p>Here we see that although the full data is not normally distributed, the data within each group is.</p>
+</div>
+<div id="data-example-3-lean-body-mass-and-physical-strength-for-men-and-women" class="section level3 hasAnchor" number="3.3.2">
+<h3><span class="header-section-number">3.3.2</span> Data Example 3: Lean body mass and physical strength for men and women<a href="model-validation.html#data-example-3-lean-body-mass-and-physical-strength-for-men-and-women" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Now we will look at data of the physical strength for men and women. As this is two sample data, we will be doing QQ-plots for both populations individually, as we assume that the data within each population is normally ditributed.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="model-validation.html#cb45-1" aria-hidden="true" tabindex="-1"></a>strength <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">&quot;data/4_1_strength.txt&quot;</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<p>In this dataset there are very few datapoints, so a histogram of the data is not a good idea.</p>
+<p>QQ-plot of the strength data, where sex=women, with a dotted line representing the true normally distributed values.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="model-validation.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(strength<span class="sc">$</span>strength[<span class="fu">which</span>(strength<span class="sc">$</span>sex<span class="sc">==</span><span class="st">&quot;women&quot;</span>)])</span>
+<span id="cb46-2"><a href="model-validation.html#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(strength<span class="sc">$</span>strength[<span class="fu">which</span>(strength<span class="sc">$</span>sex<span class="sc">==</span><span class="st">&quot;women&quot;</span>)], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z15-1.png" width="672" /></p>
+<p>QQ-plot of the strength data, where sex=men, with a dotted line representing the true normally distributed values.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="model-validation.html#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(strength<span class="sc">$</span>strength[<span class="fu">which</span>(strength<span class="sc">$</span>sex<span class="sc">==</span><span class="st">&quot;men&quot;</span>)])</span>
+<span id="cb47-2"><a href="model-validation.html#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(strength<span class="sc">$</span>strength[<span class="fu">which</span>(strength<span class="sc">$</span>sex<span class="sc">==</span><span class="st">&quot;men&quot;</span>)], <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z16-1.png" width="672" /></p>
+</div>
+</div>
+<div id="linear-nomral-models-regression-anova-ancova" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Linear nomral models (regression, ANOVA, ANCOVA)<a href="model-validation.html#linear-nomral-models-regression-anova-ancova" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>A linear model is of the from y_i=+ x_i + e_i, where it is assumed the residuals, e_1,…,e_n are iid. normal, with mean 0. Because of this, we do model validation on the residuals and not on the raw data, i.e. we need to check if the residuals are normally distributed with mean 0, same standard deviation and are independant.</p>
+<p>The two model validation plots we will be doing are a residual plot and a QQ-plot. In the residual plot we want check if the residuals of the model have the same variance, which is true of the residuals are scattered equal under and above the horizontal line at y=0. The QQ-plot checks for normality where the quantiles from the model (the dots in the plot) needs to follow the theoretical quantiles of the normal ditribution (the dotted line).</p>
+<div id="data-example-4-pillbugs-oneway-anova" class="section level3 hasAnchor" number="3.4.1">
+<h3><span class="header-section-number">3.4.1</span> Data Example 4: pillbugs (oneway ANOVA)<a href="model-validation.html#data-example-4-pillbugs-oneway-anova" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>An experiment of different stimuli was carried out with 60 pillbugs. The bugs were split into 3 equally sized groups: exposure to strong light, exposure to moisture and a control group. For each bug it was registered how many seconds it used to move six inches.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="model-validation.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(pillbug)</span></code></pre></div>
+<p>We first fit the linear model</p>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="model-validation.html#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(time<span class="sc">~</span>group, <span class="at">data=</span>pillbug)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = time ~ group, data = pillbug)
+## 
+## Coefficients:
+##   (Intercept)     groupLight  groupMoisture  
+##         173.5         -150.0           -4.3</code></pre>
+<p>Now we need to check that the residuals have equal variance and that they are normally ditributed.</p>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="model-validation.html#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">lm</span>(time<span class="sc">~</span>group, <span class="at">data=</span>pillbug),<span class="dv">1</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z19-1.png" width="672" /></p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="model-validation.html#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">lm</span>(time<span class="sc">~</span>group, <span class="at">data=</span>pillbug),<span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z19-2.png" width="672" /></p>
+<p>The first plot, “resiudals vs Fitted”, we can check if the residuals have the same standard deviation, but here we can clearly see that the two groups have different variation. The second plot, “qq-plot”, checks for normality. Here the points should be on the dotted line, but as many of them are far away from the line, we can say that the residual are not normally distributed.</p>
+<p>Now we fit a new linear model where the respons variable <code>time</code> has been log-transformed.</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="model-validation.html#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(<span class="fu">log</span>(time)<span class="sc">~</span>group, <span class="at">data=</span>pillbug)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = log(time) ~ group, data = pillbug)
+## 
+## Coefficients:
+##   (Intercept)     groupLight  groupMoisture  
+##       4.99207       -2.00211       -0.01266</code></pre>
+<p>We again perform the same model validation plots</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="model-validation.html#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">lm</span>(<span class="fu">log</span>(time)<span class="sc">~</span>group, <span class="at">data=</span>pillbug),<span class="dv">1</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z21-1.png" width="672" /></p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="model-validation.html#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">lm</span>(<span class="fu">log</span>(time)<span class="sc">~</span>group, <span class="at">data=</span>pillbug),<span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z21-2.png" width="672" /></p>
+<p>After the log-transformation we now see on the “residual vs fitted” plot, that the residuals seem to have the same standard deviation. The QQ-plot also looks nicer but still not great.</p>
+<p>Above we transformed the data using a log-transformation. Another way is using the boxcox function. This function says whether to log-tranform the data or use another transformation.
+If the 95% confidence contains lambda=0 it is best to use the log transformation, and otherwise it is best to use the transformation x^.</p>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="model-validation.html#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(time<span class="sc">~</span>group, <span class="at">data=</span>pillbug) <span class="sc">%&gt;%</span> <span class="fu">boxcox</span>() <span class="co">#the boxcox</span></span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z22-1.png" width="672" /></p>
+<p>Here we can see that the boxcox tells us to use a log transformation of the data, but we will demonstrate the other transformation aswell.</p>
+<p>Model validation plots where <code>time</code> has been transformed using boxcox(). Normally when choosing we round up or down to the nearest “nice” number. Here we choose /3:</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="model-validation.html#cb58-1" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">3</span></span>
+<span id="cb58-2"><a href="model-validation.html#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">lm</span>( time<span class="sc">^</span>lambda <span class="sc">~</span>group, <span class="at">data=</span>pillbug),<span class="dv">1</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z23-1.png" width="672" /></p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="model-validation.html#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">lm</span>( time<span class="sc">^</span>lambda <span class="sc">~</span>group, <span class="at">data=</span>pillbug),<span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z23-2.png" width="672" /></p>
+<p>Here the residuals look worse for this transformation than the log transformation, and the QQ-plot looks about the same.</p>
+<p>Now we want to check if the response variable <code>time</code> is normally distributed.</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="model-validation.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(pillbug<span class="sc">$</span>time)</span>
+<span id="cb60-2"><a href="model-validation.html#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(pillbug<span class="sc">$</span>time, <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z24-1.png" width="672" /></p>
+<p>In the qq-plot we see that the lower quantiles is way off the theoretical true quantiles, which indicates that <code>time</code> is not normally distributed. We therefore now try and log-transform the variable to see if the transformed variable is normally distributed:</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="model-validation.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">log</span>(pillbug<span class="sc">$</span>time))</span>
+<span id="cb61-2"><a href="model-validation.html#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">log</span>(pillbug<span class="sc">$</span>time), <span class="at">col =</span> <span class="st">&quot;black&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z25-1.png" width="672" /></p>
+<p>Now the lower quantiles are better, but the upper quantiles are now off by a considerable amount. From these two QQ-plots it is not clear whether a log-transformation is better than the original variable.</p>
+</div>
+<div id="data-example-5-lean-body-mass-and-physical-strength-for-men-and-women-continued" class="section level3 hasAnchor" number="3.4.2">
+<h3><span class="header-section-number">3.4.2</span> Data Example 5: Lean body mass and physical strength for men and women (continued)<a href="model-validation.html#data-example-5-lean-body-mass-and-physical-strength-for-men-and-women-continued" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Fit model og lav de relevante plots. Her set alt godt ud.</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="model-validation.html#cb62-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(strength <span class="sc">~</span> sex <span class="sc">+</span> lean.body.mass, <span class="at">data=</span>strength)</span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="model-validation.html#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model,<span class="dv">1</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z27-1.png" width="672" /></p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="model-validation.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model,<span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z27-2.png" width="672" /></p>
+</div>
+<div id="data-example-5-birthwt" class="section level3 hasAnchor" number="3.4.3">
+<h3><span class="header-section-number">3.4.3</span> Data Example 5: birthwt<a href="model-validation.html#data-example-5-birthwt" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Alternativ til eksemplet ovenfor. De skal nok ikke begge være der, men lav evt begge sæt plots i første omgang.</p>
+<p>Data fra MASS-pakken, så læs om det på hjælpesiden. Fit en “lidt tilfældig model” (sådan skal det ikke beskrives) og lav de relevante plots. Her set alt godt ud.</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="model-validation.html#cb65-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(bwt <span class="sc">~</span> lwt <span class="sc">+</span> smoke <span class="sc">+</span> age <span class="sc">+</span> ht, <span class="at">data=</span>birthwt)</span></code></pre></div>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="model-validation.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model,<span class="dv">1</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z29-1.png" width="672" /></p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="model-validation.html#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model,<span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z29-2.png" width="672" /></p>
+</div>
+</div>
+<div id="miscellaneous" class="section level2 hasAnchor" number="3.5">
+<h2><span class="header-section-number">3.5</span> Miscellaneous<a href="model-validation.html#miscellaneous" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="intepretation-of-results-when-transforming" class="section level3 hasAnchor" number="3.5.1">
+<h3><span class="header-section-number">3.5.1</span> Intepretation of results when transforming<a href="model-validation.html#intepretation-of-results-when-transforming" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Transforming data is a tradeoff between getting normally distributed data and interpretation of the results. When transforming data you cannot make statements about the means estimated by the model, and the differences of the means. Instead we can make statements about the ratio of the estimated difference in means. The p-values estimated by the model also carry directly over to the non-transformed data.</p>
+<p>In the Pillbug example we log transformed our data:</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="model-validation.html#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(<span class="fu">log</span>(time)<span class="sc">~</span>group, <span class="at">data=</span>pillbug)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = log(time) ~ group, data = pillbug)
+## 
+## Coefficients:
+##   (Intercept)     groupLight  groupMoisture  
+##       4.99207       -2.00211       -0.01266</code></pre>
+<p>Here the mean log(time) of the control group is 4.99 and the mean difference between control and Light is -2.0. This means the ratio of means of the original populations is estimated to be exp(-2.0)≈0.135, i.e. the mean time for group=Light is about 0.135 times smaller than the control group.</p>
+</div>
+<div id="boxcox" class="section level3 hasAnchor" number="3.5.2">
+<h3><span class="header-section-number">3.5.2</span> Boxcox<a href="model-validation.html#boxcox" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>When the data is in need for a transformation it can be hard to know which transformation to choose. Here the boxcox function can be of great help. Given some linear model, it can say which tranformation that would suit the data best. The output of the function is a value and a confidence interval. If 0 is contained in the confidence interval, the function suggests to use a log-transformation. If not, the function suggests to use x^{} (where c is the data that needs transformation) as the tranformation. Here we recommend to not use the exact value of , but the nearest “nice” number, i.e. 1/3, 1/2, 1, 2 etc.</p>
+<p>For an example of using Boxcox see “Data Example 4: pillbugs” in this document.</p>
+</div>
+<div id="shapiro-wilk-hypothesis-test-for-normality" class="section level3 hasAnchor" number="3.5.3">
+<h3><span class="header-section-number">3.5.3</span> Shapiro Wilk hypothesis test for normality<a href="model-validation.html#shapiro-wilk-hypothesis-test-for-normality" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Throughout this document we have used visual inspection to asses the normality of the data, but another method is the Shapiro Wilk hypothesis test. The advantage of this test is that we get a p-value, so we can make a more “formal” conclusion about normality. The disadvantage is that tests like this are very sensitive to sample size. Therefore when using this test we still advice to use the visual methods described above, to reach a better conclusion.</p>
+<p>Here we will perform the Shapiro Wilk test on the simulated data from the “simulated data example”. First we will perform it on the data for both treatsments (which is not normally ditributed) and then on only one treament (which is normal)</p>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="model-validation.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(df<span class="sc">$</span>value)</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  df$value
+## W = 0.92398, p-value = 2.303e-05</code></pre>
+<p>Here the p-value is very small which indicates that the distribution of the data is significantly different from a normal distribution.</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="model-validation.html#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(df<span class="sc">$</span>value[<span class="fu">which</span>(df<span class="sc">$</span>treat<span class="sc">==</span><span class="st">&quot;0&quot;</span>)])</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  df$value[which(df$treat == &quot;0&quot;)]
+## W = 0.98717, p-value = 0.8593</code></pre>
+<p>Here the p-value is well above 0.05 which indicates that the distribution of the data is not significantly different from a normal distribution.</p>
+<p>Now finally we want to show the disadvantage of the method. Here we generate 20 uniformly distrubted data points between -1 and 1:</p>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="model-validation.html#cb74-1" aria-hidden="true" tabindex="-1"></a>unifdata <span class="ot">&lt;-</span> <span class="fu">runif</span>(<span class="dv">20</span>, <span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>)</span>
+<span id="cb74-2"><a href="model-validation.html#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(unifdata)</span></code></pre></div>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  unifdata
+## W = 0.92036, p-value = 0.1007</code></pre>
+<p>Here the p-value is bigger than 0.05 which indicates that the data is not significantly different from a normal distribution, i.e. the test says that the data is normally distributed which it isn’t. Now for a qq-plot of the data:</p>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="model-validation.html#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(unifdata)</span>
+<span id="cb76-2"><a href="model-validation.html#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(unifdata, <span class="at">col =</span> <span class="st">&quot;red&quot;</span>, <span class="at">lwd =</span> <span class="dv">1</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/z35-1.png" width="672" /></p>
+<p>The tails of this QQ-plot are very far off from the dotted line, which in combination with the few data points, would make us hesitant to call this data normally distributed. Not to say that this QQ-plot couldn’t be from a normal distribution, but just that we can’t for sure conclude that it is/isn’t normally distributed, which we might do only based on the p-value from the Shapiro Wilk test. To summaries the this example: From the Shapiro Wilk test we could be tempted to conclude that the data is normally distributed, but then looking at QQ-plot of the data we would be more hesistant to make that conlcusion.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="linear-regression.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="onewayANOVA.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/HjalteSoeberg/DataLab_StudCons/edit/main/modelval.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/HjalteSoeberg/DataLab_StudCons/blob/main/modelval.Rmd",
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

@@ -1,8 +1,26 @@
 --- 
-title: "DataLab StudCons"
-author: "Anders Tolver, Bo Markussen, Helle Sørensen, Hjalte Søberg Mikkelsen"
+title: "A short introduction to common statistical data analysis techniques"
+author: "[Data Science Lab](https://datalab.science.ku.dk/english/), University of Copenhagen"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 ---
 
-# asdas
+# About this document {-}
+
+This document contains instructions on how to use selected popular statistical models. Data analyses are carried out using [R](https://www.r-project.org/), but many comments can be read without prior knowledge of R. The document is aimed at students (at all levels) enrolled at the Faculty of Sciences at University of Copenhagen. 
+
+Examples and comments are continuously expanded and are strongly inspired by real problems that have been presented to us by students at our [statistics consultations](https://datalab.science.ku.dk/english/consultations/).
+
+This document has been created using the [`bookdown`](https://bookdown.org/) R package.
+
+Copenhagen, April 2023
+
+Anders Tolver, Hjalte Søberg Mikkelsen, Bo Markussen
+
+```{r, echo=FALSE,results='hide',message=FALSE,warning=FALSE,fig.show='hide'}
+
+#To publish book run the code "bookdown::publish_book(render = "local")", but only after knitting all documents individually
+
+```
+
+

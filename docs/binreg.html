@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 1 Binary Regression | A short introduction to common statistical data analysis techniques</title>
+  <meta name="description" content="Chapter 1 Binary Regression | A short introduction to common statistical data analysis techniques" />
+  <meta name="generator" content="bookdown 0.42 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 1 Binary Regression | A short introduction to common statistical data analysis techniques" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 1 Binary Regression | A short introduction to common statistical data analysis techniques" />
+  
+  
+  
+
+<meta name="author" content="Data Science Lab, University of Copenhagen" />
+
+
+<meta name="date" content="2025-02-11" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="index.html"/>
+<link rel="next" href="linear-regression.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>About this document</a></li>
+<li class="chapter" data-level="1" data-path="binreg.html"><a href="binreg.html"><i class="fa fa-check"></i><b>1</b> Binary Regression</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="binreg.html"><a href="binreg.html#when-to-use-this-model"><i class="fa fa-check"></i><b>1.1</b> When to use this model?</a></li>
+<li class="chapter" data-level="1.2" data-path="binreg.html"><a href="binreg.html#description-of-the-model"><i class="fa fa-check"></i><b>1.2</b> Description of the Model</a></li>
+<li class="chapter" data-level="1.3" data-path="binreg.html"><a href="binreg.html#similarities-to-the-chi-squared-test"><i class="fa fa-check"></i><b>1.3</b> similarities to the chi-squared test</a></li>
+<li class="chapter" data-level="1.4" data-path="binreg.html"><a href="binreg.html#example-1-simple-example-but-bad-model-fit"><i class="fa fa-check"></i><b>1.4</b> Example 1: Simple example but bad model fit</a>
+<ul>
+<li class="chapter" data-level="1.4.1" data-path="binreg.html"><a href="binreg.html#organizing-data"><i class="fa fa-check"></i><b>1.4.1</b> Organizing data</a></li>
+<li class="chapter" data-level="1.4.2" data-path="binreg.html"><a href="binreg.html#fitting-model"><i class="fa fa-check"></i><b>1.4.2</b> Fitting Model</a></li>
+<li class="chapter" data-level="1.4.3" data-path="binreg.html"><a href="binreg.html#model-validering-via-gof-pakken.-gerne-via-kkholst-på-github."><i class="fa fa-check"></i><b>1.4.3</b> Model validering via gof-pakken. Gerne via kkholst på github.</a></li>
+<li class="chapter" data-level="1.4.4" data-path="binreg.html"><a href="binreg.html#hypothesis-test"><i class="fa fa-check"></i><b>1.4.4</b> Hypothesis test</a></li>
+<li class="chapter" data-level="1.4.5" data-path="binreg.html"><a href="binreg.html#parameter-estimates-with-emmeans."><i class="fa fa-check"></i><b>1.4.5</b> Parameter estimates with emmeans.</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="binreg.html"><a href="binreg.html#example-2-multiple-variables-and-correct-model-fit"><i class="fa fa-check"></i><b>1.5</b> Example 2: Multiple variables and correct model fit</a>
+<ul>
+<li class="chapter" data-level="1.5.1" data-path="binreg.html"><a href="binreg.html#organizing-data-1"><i class="fa fa-check"></i><b>1.5.1</b> Organizing data</a></li>
+<li class="chapter" data-level="1.5.2" data-path="binreg.html"><a href="binreg.html#fitting-model-1"><i class="fa fa-check"></i><b>1.5.2</b> Fitting Model</a></li>
+<li class="chapter" data-level="1.5.3" data-path="binreg.html"><a href="binreg.html#model-validering-via-gof-pakken.-gerne-via-kkholst-på-github.-1"><i class="fa fa-check"></i><b>1.5.3</b> Model validering via gof-pakken. Gerne via kkholst på github.</a></li>
+<li class="chapter" data-level="1.5.4" data-path="binreg.html"><a href="binreg.html#hypothesis-test-1"><i class="fa fa-check"></i><b>1.5.4</b> Hypothesis test</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2</b> Linear regression</a></li>
+<li class="chapter" data-level="3" data-path="model-validation.html"><a href="model-validation.html"><i class="fa fa-check"></i><b>3</b> Model Validation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="model-validation.html"><a href="model-validation.html#why-and-how"><i class="fa fa-check"></i><b>3.1</b> Why and How</a></li>
+<li class="chapter" data-level="3.2" data-path="model-validation.html"><a href="model-validation.html#sample-size-of-one"><i class="fa fa-check"></i><b>3.2</b> Sample size of one</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="model-validation.html"><a href="model-validation.html#data-example-1-weight-of-crabs"><i class="fa fa-check"></i><b>3.2.1</b> Data Example 1: Weight of Crabs</a></li>
+<li class="chapter" data-level="3.2.2" data-path="model-validation.html"><a href="model-validation.html#data-example-2-salary-data-from-connecticut---log-transformation"><i class="fa fa-check"></i><b>3.2.2</b> Data Example 2: Salary Data from Connecticut - log transformation</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="model-validation.html"><a href="model-validation.html#sample-size-of-two"><i class="fa fa-check"></i><b>3.3</b> Sample size of two</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="model-validation.html"><a href="model-validation.html#simulated-data-example"><i class="fa fa-check"></i><b>3.3.1</b> Simulated data example</a></li>
+<li class="chapter" data-level="3.3.2" data-path="model-validation.html"><a href="model-validation.html#data-example-3-lean-body-mass-and-physical-strength-for-men-and-women"><i class="fa fa-check"></i><b>3.3.2</b> Data Example 3: Lean body mass and physical strength for men and women</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="model-validation.html"><a href="model-validation.html#linear-nomral-models-regression-anova-ancova"><i class="fa fa-check"></i><b>3.4</b> Linear nomral models (regression, ANOVA, ANCOVA)</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="model-validation.html"><a href="model-validation.html#data-example-4-pillbugs-oneway-anova"><i class="fa fa-check"></i><b>3.4.1</b> Data Example 4: pillbugs (oneway ANOVA)</a></li>
+<li class="chapter" data-level="3.4.2" data-path="model-validation.html"><a href="model-validation.html#data-example-5-lean-body-mass-and-physical-strength-for-men-and-women-continued"><i class="fa fa-check"></i><b>3.4.2</b> Data Example 5: Lean body mass and physical strength for men and women (continued)</a></li>
+<li class="chapter" data-level="3.4.3" data-path="model-validation.html"><a href="model-validation.html#data-example-5-birthwt"><i class="fa fa-check"></i><b>3.4.3</b> Data Example 5: birthwt</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="model-validation.html"><a href="model-validation.html#miscellaneous"><i class="fa fa-check"></i><b>3.5</b> Miscellaneous</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="model-validation.html"><a href="model-validation.html#intepretation-of-results-when-transforming"><i class="fa fa-check"></i><b>3.5.1</b> Intepretation of results when transforming</a></li>
+<li class="chapter" data-level="3.5.2" data-path="model-validation.html"><a href="model-validation.html#boxcox"><i class="fa fa-check"></i><b>3.5.2</b> Boxcox</a></li>
+<li class="chapter" data-level="3.5.3" data-path="model-validation.html"><a href="model-validation.html#shapiro-wilk-hypothesis-test-for-normality"><i class="fa fa-check"></i><b>3.5.3</b> Shapiro Wilk hypothesis test for normality</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="onewayANOVA.html"><a href="onewayANOVA.html"><i class="fa fa-check"></i><b>4</b> One-way analysis of variance</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#when-to-use-this-model-1"><i class="fa fa-check"></i><b>4.1</b> When to use this model?</a></li>
+<li class="chapter" data-level="4.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#organisation-of-data-and-data-import"><i class="fa fa-check"></i><b>4.2</b> Organisation of data and data import</a></li>
+<li class="chapter" data-level="4.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#data-exploration"><i class="fa fa-check"></i><b>4.3</b> Data exploration</a></li>
+<li class="chapter" data-level="4.4" data-path="onewayANOVA.html"><a href="onewayANOVA.html#fitting-the-model"><i class="fa fa-check"></i><b>4.4</b> Fitting the model</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#with-default-reference-group"><i class="fa fa-check"></i><b>4.4.1</b> … with default reference group</a></li>
+<li class="chapter" data-level="4.4.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#without-a-reference-group"><i class="fa fa-check"></i><b>4.4.2</b> .. without a reference group</a></li>
+<li class="chapter" data-level="4.4.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#with-user-defined-reference-group"><i class="fa fa-check"></i><b>4.4.3</b> … with user defined reference group</a></li>
+<li class="chapter" data-level="4.4.4" data-path="onewayANOVA.html"><a href="onewayANOVA.html#digging-more-into-the-output-from-summary"><i class="fa fa-check"></i><b>4.4.4</b> Digging more into the output from <code>summary()</code></a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="onewayANOVA.html"><a href="onewayANOVA.html#validating-the-model"><i class="fa fa-check"></i><b>4.5</b> Validating the model</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#why-do-i-need-to-valide-the-model"><i class="fa fa-check"></i><b>4.5.1</b> Why do I need to valide the model?</a></li>
+<li class="chapter" data-level="4.5.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#how-do-i-validate-the-model-assumptions"><i class="fa fa-check"></i><b>4.5.2</b> How do I validate the model assumptions?</a></li>
+<li class="chapter" data-level="4.5.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#what-to-do-if-the-model-is-not-valid"><i class="fa fa-check"></i><b>4.5.3</b> What to do if the model is not valid?</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="onewayANOVA.html"><a href="onewayANOVA.html#extracting-estimates-with-emmeans"><i class="fa fa-check"></i><b>4.6</b> Extracting estimates with <code>emmeans()</code></a></li>
+<li class="chapter" data-level="4.7" data-path="onewayANOVA.html"><a href="onewayANOVA.html#reporting-the-results"><i class="fa fa-check"></i><b>4.7</b> Reporting the results</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#tables"><i class="fa fa-check"></i><b>4.7.1</b> Tables</a></li>
+<li class="chapter" data-level="4.7.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#figures"><i class="fa fa-check"></i><b>4.7.2</b> Figures</a></li>
+<li class="chapter" data-level="4.7.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#stat-methods-section"><i class="fa fa-check"></i><b>4.7.3</b> Stat methods section</a></li>
+</ul></li>
+<li class="chapter" data-level="4.8" data-path="onewayANOVA.html"><a href="onewayANOVA.html#alternatives-and-related-statistical-methods"><i class="fa fa-check"></i><b>4.8</b> Alternatives and related statistical methods</a>
+<ul>
+<li class="chapter" data-level="4.8.1" data-path="onewayANOVA.html"><a href="onewayANOVA.html#logtrans"><i class="fa fa-check"></i><b>4.8.1</b> Analysis on logtransformed scale</a></li>
+<li class="chapter" data-level="4.8.2" data-path="onewayANOVA.html"><a href="onewayANOVA.html#onewaynonpar"><i class="fa fa-check"></i><b>4.8.2</b> Relation to t-tests and non-parametric testing</a></li>
+<li class="chapter" data-level="4.8.3" data-path="onewayANOVA.html"><a href="onewayANOVA.html#bootstrap"><i class="fa fa-check"></i><b>4.8.3</b> When data are not normally distributed</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="poisson-regression.html"><a href="poisson-regression.html"><i class="fa fa-check"></i><b>5</b> Poisson regression</a></li>
+<li class="chapter" data-level="6" data-path="mixedmodels.html"><a href="mixedmodels.html"><i class="fa fa-check"></i><b>6</b> Analysis of repeated measures</a></li>
+<li class="chapter" data-level="7" data-path="twowayANOVA.html"><a href="twowayANOVA.html"><i class="fa fa-check"></i><b>7</b> Two-way analysis of variance</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="twowayANOVA.html"><a href="twowayANOVA.html#when-to-use-this-model-2"><i class="fa fa-check"></i><b>7.1</b> When to use this model?</a></li>
+<li class="chapter" data-level="7.2" data-path="twowayANOVA.html"><a href="twowayANOVA.html#organizing-data-2"><i class="fa fa-check"></i><b>7.2</b> Organizing data</a></li>
+<li class="chapter" data-level="7.3" data-path="twowayANOVA.html"><a href="twowayANOVA.html#data-exploration-1"><i class="fa fa-check"></i><b>7.3</b> Data exploration</a></li>
+<li class="chapter" data-level="7.4" data-path="twowayANOVA.html"><a href="twowayANOVA.html#fitting-model-2"><i class="fa fa-check"></i><b>7.4</b> Fitting model</a></li>
+<li class="chapter" data-level="7.5" data-path="twowayANOVA.html"><a href="twowayANOVA.html#validating-the-model-1"><i class="fa fa-check"></i><b>7.5</b> Validating the model</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="twowayANOVA.html"><a href="twowayANOVA.html#why-do-i-need-to-valide-the-model-1"><i class="fa fa-check"></i><b>7.5.1</b> Why do I need to valide the model?</a></li>
+<li class="chapter" data-level="7.5.2" data-path="twowayANOVA.html"><a href="twowayANOVA.html#how-do-i-validate-the-model-assumptions-1"><i class="fa fa-check"></i><b>7.5.2</b> How do I validate the model assumptions?</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="twowayANOVA.html"><a href="twowayANOVA.html#hypothesis-test-2"><i class="fa fa-check"></i><b>7.6</b> Hypothesis test</a></li>
+<li class="chapter" data-level="7.7" data-path="twowayANOVA.html"><a href="twowayANOVA.html#extracting-estimates-with-emmeans-1"><i class="fa fa-check"></i><b>7.7</b> Extracting estimates with <code>emmeans()</code></a></li>
+<li class="chapter" data-level="7.8" data-path="twowayANOVA.html"><a href="twowayANOVA.html#writing-articlereport"><i class="fa fa-check"></i><b>7.8</b> Writing article/report</a>
+<ul>
+<li class="chapter" data-level="7.8.1" data-path="twowayANOVA.html"><a href="twowayANOVA.html#how-to-write-method-section"><i class="fa fa-check"></i><b>7.8.1</b> How to write method section</a></li>
+<li class="chapter" data-level="7.8.2" data-path="twowayANOVA.html"><a href="twowayANOVA.html#how-to-write-results-section"><i class="fa fa-check"></i><b>7.8.2</b> How to write results section</a></li>
+</ul></li>
+<li class="chapter" data-level="7.9" data-path="twowayANOVA.html"><a href="twowayANOVA.html#miscellaneous-1"><i class="fa fa-check"></i><b>7.9</b> Miscellaneous</a>
+<ul>
+<li class="chapter" data-level="7.9.1" data-path="twowayANOVA.html"><a href="twowayANOVA.html#why-to-not-use-anova-tables"><i class="fa fa-check"></i><b>7.9.1</b> Why to not use ANOVA tables</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">A short introduction to common statistical data analysis techniques</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="binreg" class="section level1 hasAnchor" number="1">
+<h1><span class="header-section-number">Chapter 1</span> Binary Regression<a href="binreg.html#binreg" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="binreg.html#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># To download the tools needed for model validation run the line of code below</span></span>
+<span id="cb1-2"><a href="binreg.html#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#devtools::install_github(&quot;kkholst/gof&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="binreg.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="binreg.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb2-3"><a href="binreg.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vtable)</span>
+<span id="cb2-4"><a href="binreg.html#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dobson)</span>
+<span id="cb2-5"><a href="binreg.html#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gof)</span>
+<span id="cb2-6"><a href="binreg.html#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlbench)</span>
+<span id="cb2-7"><a href="binreg.html#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lattice)</span></code></pre></div>
+<div id="when-to-use-this-model" class="section level2 hasAnchor" number="1.1">
+<h2><span class="header-section-number">1.1</span> When to use this model?<a href="binreg.html#when-to-use-this-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Binary logistic regression is used when the response variable is binary, for example the response can be in the form <code>yes</code> or <code>no</code> and <code>dead</code> or <code>alive</code>. The explanatory variables can still be continuous or discrete, and there is no limit on the number of explanatory variables.</p>
+<p>In the examples in this chapter we will be using the <code>beetle</code> data from the package <code>dobson</code>. Here our explanatory variable is doseage of carbon-disulfide (CS_2) and the response is <code>dead</code> or <code>alive</code>.</p>
+</div>
+<div id="description-of-the-model" class="section level2 hasAnchor" number="1.2">
+<h2><span class="header-section-number">1.2</span> Description of the Model<a href="binreg.html#description-of-the-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The binary response is coded as 1 and 0, instead of for example <code>yes</code> or <code>no</code>. This means we can’t just use normal linear regression, as then the response could be outside the range of 0 and 1. This is why we need to make us of the logit link function, and the method is called logistic regression.</p>
+<p>In normal linear regression we assume the the response <code>y</code> is in the form <span class="math inline">\(y=b_0+b_1x_1+...+b_nx_n\)</span>, where the x’s are the explanatory variables and <span class="math inline">\(b_0,...,b_n\)</span> are the parameters we estimate through linear regression. Now in binary linear regression we assume the response <code>y</code> is in the form <span class="math inline">\(y=\frac{\exp(b_0+b_1x_1+...+b_nx_n)}{1+\exp(b_0+b_1x_1+...+b_nx_n)}\)</span>, so we still have the linear combination of the explanatory variables and the response is now between 0 and 1.</p>
+<p>The model then outputs the probability of seeing <code>yes</code> or <code>no</code> given the explanatory variables.</p>
+<p>The coefficients we get from doing a logistic regression correspond to what we call “log odds”. If we are in a model with one explanatory variable and a response variable, the response is assumed to take the form <span class="math inline">\(y=\frac{\exp(b_0+b_1x_1)}{1+\exp(b_0+b_1x_1)}\)</span>. Here <span class="math inline">\(b_0+b_1x_1\)</span> corresponds to the log odds which means <span class="math inline">\(\exp(b_0+b_1x_1)\)</span> is the odds ratio of <span class="math inline">\(y=1\)</span>, and can take values in teh range <span class="math inline">\([0,\infty)\)</span>. This means that <span class="math inline">\(\exp(b_0+b_1x_1)=\frac{P}{1-P}\)</span> where <span class="math inline">\(P\)</span> is the probability of success. The odds ratio of 1 is when the probability of success is equal to the probability of failure. The odds ratio of 2 is when the probability of success is twice the probability of failure. The odds ratio of 0.5 is when the probability of failure is twice the probability of success.</p>
+</div>
+<div id="similarities-to-the-chi-squared-test" class="section level2 hasAnchor" number="1.3">
+<h2><span class="header-section-number">1.3</span> similarities to the chi-squared test<a href="binreg.html#similarities-to-the-chi-squared-test" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The chi-squared test can also be used for binary data, and it has its advantages and disadvantages mainly: Its simple. It is a very simple and easy test, but the result is also simple. If we just want to know if our observations are significant, the chi-squared test is great´, but it doesn’t really say more than that. In our example with the beetles, we could be interested in knowing if carbon-disulfide can kill the beetles and the different dosages. Here our null-hypothesis would be that it doesnt kill the beetles, and we would probably find through the chi-squared test that we reject this null-hypothesis for most/all dosages.
+Binary logistic regression can instead find the probability of a beetle to survive given a specific dosage.</p>
+</div>
+<div id="example-1-simple-example-but-bad-model-fit" class="section level2 hasAnchor" number="1.4">
+<h2><span class="header-section-number">1.4</span> Example 1: Simple example but bad model fit<a href="binreg.html#example-1-simple-example-but-bad-model-fit" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="organizing-data" class="section level3 hasAnchor" number="1.4.1">
+<h3><span class="header-section-number">1.4.1</span> Organizing data<a href="binreg.html#organizing-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We load the <code>beetle</code> data from the package <code>dobson</code>, and change the names of the varibles to ones that makes more sense:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="binreg.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Loading the data</span></span>
+<span id="cb3-2"><a href="binreg.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(beetle)</span>
+<span id="cb3-3"><a href="binreg.html#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="binreg.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#Changing names of the variables</span></span>
+<span id="cb3-5"><a href="binreg.html#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(beetle) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;dose&quot;</span>, <span class="st">&quot;number&quot;</span>, <span class="st">&quot;dead&quot;</span>)</span>
+<span id="cb3-6"><a href="binreg.html#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="binreg.html#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#Making new varible</span></span>
+<span id="cb3-8"><a href="binreg.html#cb3-8" aria-hidden="true" tabindex="-1"></a>beetle<span class="sc">$</span>proportion <span class="ot">&lt;-</span> beetle<span class="sc">$</span>dead<span class="sc">/</span>beetle<span class="sc">$</span>number</span></code></pre></div>
+<p>Now we make a variable table together with a simple linear regression, to get an overview of the data:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="binreg.html#cb4-1" aria-hidden="true" tabindex="-1"></a>Description <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Dosage of CS2 in log10(mg/l)&quot;</span>,<span class="st">&quot;Number of beetles&quot;</span>,<span class="st">&quot;Number of beetles that died&quot;</span>, <span class="st">&quot;Propotion of beetles that is dead&quot;</span>)</span>
+<span id="cb4-2"><a href="binreg.html#cb4-2" aria-hidden="true" tabindex="-1"></a>Use <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Explanatory variable&quot;</span>, <span class="st">&quot;Response variable&quot;</span>, <span class="st">&quot;Response variable&quot;</span>, <span class="st">&quot;Response variable&quot;</span>)</span>
+<span id="cb4-3"><a href="binreg.html#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="fu">vt</span>(beetle, <span class="at">out =</span> <span class="st">&quot;return&quot;</span>),<span class="fu">data.frame</span>(Description,Use))</span></code></pre></div>
+<pre><code>##         Name   Class              Values                       Description                  Use
+## 1       dose numeric Num: 1.691 to 1.884      Dosage of CS2 in log10(mg/l) Explanatory variable
+## 2     number numeric       Num: 56 to 63                 Number of beetles    Response variable
+## 3       dead numeric        Num: 6 to 61       Number of beetles that died    Response variable
+## 4 proportion numeric     Num: 0.102 to 1 Propotion of beetles that is dead    Response variable</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="binreg.html#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(beetle,<span class="fu">aes</span>(<span class="at">x=</span>dose,<span class="at">y=</span>dead<span class="sc">/</span>number)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">&quot;lm&quot;</span>) <span class="sc">+</span></span>
+<span id="cb6-2"><a href="binreg.html#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">&quot;log10(CS2 mg/l)&quot;</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;Proportion of dead beetles&quot;</span>) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="binreg.html#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="bookdownproj_files/figure-html/b4-1.png" width="672" /></p>
+<p>Note: If we trust this linear regression blindly we could be inclined to think that given a dosage of 2 log10(CS2 mg/L) we would get a proportion of dead beetles which exceeds 1. This of course doesn’t make sense and is why we need another method than just simple linear regression.</p>
+</div>
+<div id="fitting-model" class="section level3 hasAnchor" number="1.4.2">
+<h3><span class="header-section-number">1.4.2</span> Fitting Model<a href="binreg.html#fitting-model" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We fit the model using the <code>glm()</code> function, and as a response variable we use the table:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="binreg.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(beetle<span class="sc">$</span>dead,beetle<span class="sc">$</span>number<span class="sc">-</span>beetle<span class="sc">$</span>dead)</span></code></pre></div>
+<pre><code>##      [,1] [,2]
+## [1,]    6   53
+## [2,]   13   47
+## [3,]   18   44
+## [4,]   28   28
+## [5,]   52   11
+## [6,]   53    6
+## [7,]   61    1
+## [8,]   60    0</code></pre>
+<p>Where the first column is the number of beetles that died and the second is number of beetles still alive, given the dosage of carbon-disulfide.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="binreg.html#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make probit regression</span></span>
+<span id="cb10-2"><a href="binreg.html#cb10-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(dead,number<span class="sc">-</span>dead)<span class="sc">~</span>dose,<span class="at">data=</span>beetle,<span class="at">family=</span><span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>)) <span class="co">#cbind(dead,number-dead) makes table consisting of 2 columns and 8 rows, with the first column representing number of beetles that died and the second column is how many beetles are alive</span></span>
+<span id="cb10-3"><a href="binreg.html#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="binreg.html#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = cbind(dead, number - dead) ~ dose, family = binomial(link = &quot;logit&quot;), 
+##     data = beetle)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.5941  -0.3944   0.8329   1.2592   1.5940  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  -60.717      5.181  -11.72   &lt;2e-16 ***
+## dose          34.270      2.912   11.77   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 284.202  on 7  degrees of freedom
+## Residual deviance:  11.232  on 6  degrees of freedom
+## AIC: 41.43
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>In the summary we can see that the dosage of CS2 i very significant. From the summary we also get the estimates of the coefficients in the logit function, i.e. our model estimates the logit function to be:
+<span class="math inline">\(y=\frac{\exp(-60.717+34.27*dose)}{1+\exp(-60.717+34.27*dose)}\)</span>, where y is the probability of the beetles dying.</p>
+<p>We can then plot the estimated logit function together with the known data:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="binreg.html#cb12-1" aria-hidden="true" tabindex="-1"></a>preds <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">dose =</span> <span class="fu">seq</span>(<span class="fu">min</span>(beetle<span class="sc">$</span>dose), <span class="fu">max</span>(beetle<span class="sc">$</span>dose), <span class="at">length.out =</span> <span class="dv">500</span>))</span>
+<span id="cb12-2"><a href="binreg.html#cb12-2" aria-hidden="true" tabindex="-1"></a>preds<span class="sc">$</span>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(m1, preds, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)</span>
+<span id="cb12-3"><a href="binreg.html#cb12-3" aria-hidden="true" tabindex="-1"></a>preds<span class="sc">$</span>upper <span class="ot">&lt;-</span> <span class="fu">predict</span>(m1, preds, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>fit <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">predict</span>(m1, preds, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>se.fit</span>
+<span id="cb12-4"><a href="binreg.html#cb12-4" aria-hidden="true" tabindex="-1"></a>preds<span class="sc">$</span>lower <span class="ot">&lt;-</span> <span class="fu">predict</span>(m1, preds, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>fit <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> <span class="fu">predict</span>(m1, preds, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>, <span class="at">se.fit =</span> <span class="cn">TRUE</span>)<span class="sc">$</span>se.fit</span>
+<span id="cb12-5"><a href="binreg.html#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="binreg.html#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(beetle, <span class="fu">aes</span>(<span class="at">x =</span> dose, <span class="at">y =</span> proportion)) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="binreg.html#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="binreg.html#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> preds, <span class="fu">aes</span>(<span class="at">x =</span> dose, <span class="at">y =</span> pred), <span class="at">color =</span> <span class="st">&quot;red&quot;</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb12-9"><a href="binreg.html#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="at">data =</span> preds, <span class="fu">aes</span>(<span class="at">x =</span> dose, <span class="at">ymin =</span> lower, <span class="at">ymax =</span> upper), <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">inherit.aes =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb12-10"><a href="binreg.html#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/b7-1.png" width="672" /></p>
+</div>
+<div id="model-validering-via-gof-pakken.-gerne-via-kkholst-på-github." class="section level3 hasAnchor" number="1.4.3">
+<h3><span class="header-section-number">1.4.3</span> Model validering via gof-pakken. Gerne via kkholst på github.<a href="binreg.html#model-validering-via-gof-pakken.-gerne-via-kkholst-på-github." class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The binary logistic regression model only holds if the following assumptions hold:</p>
+<ul>
+<li>The explanatory variables are independent</li>
+<li>The observations are independent</li>
+<li>The explanatory variables are linearly related to the log odds of the dependent variable</li>
+</ul>
+<p>In our example with the beetle data, we only have one explanatory variable so assumption 1 is trivially fulfilled.</p>
+<p>To check assumption two we can do a residual plot just like in normal linear regression, although here it is not as usefull. In normal linear regression we check if there is any patterns to the residuals, i.e. if they are randomly distributed, but in binary regression the residuals are expected to have a distinct pattern (this can be seen in the second exmaple further down). Therefore a residual plot in this case is mostly used to spot outliers.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="binreg.html#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m1, <span class="at">which =</span> <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/b8-1.png" width="672" /></p>
+<p>This residual plot is impossible to interpret as there is too few data points.</p>
+<p>A better way to check assumption two is to simulate the cumulative sum of the residual process, and hold those simulations up against the observed cumulative sum:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="binreg.html#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumres</span>(m1))</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/b9-1.png" width="672" /><img src="bookdownproj_files/figure-html/b9-2.png" width="672" /></p>
+<p>Here the null-hypothesis is that the model is correct, which means that the test suggests that the model is false as the p-value is 0.009-0.011.</p>
+</div>
+<div id="hypothesis-test" class="section level3 hasAnchor" number="1.4.4">
+<h3><span class="header-section-number">1.4.4</span> Hypothesis test<a href="binreg.html#hypothesis-test" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To do an hypothesis for the binary logistic regression, we use the function <code>drop1()</code> on our fitted model:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="binreg.html#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">drop1</span>(m1, <span class="at">test=</span><span class="st">&quot;Chisq&quot;</span>)</span></code></pre></div>
+<pre><code>## Single term deletions
+## 
+## Model:
+## cbind(dead, number - dead) ~ dose
+##        Df Deviance    AIC    LRT  Pr(&gt;Chi)    
+## &lt;none&gt;      11.232  41.43                     
+## dose    1  284.202 312.40 272.97 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Here we see our explanatory variable <code>dose</code> is statistically significant and we can therefore reject the null, i.e. this test suggests that dosage of CS2 do impact whether the beetles live or die, under the assumption that the model is true.</p>
+</div>
+<div id="parameter-estimates-with-emmeans." class="section level3 hasAnchor" number="1.4.5">
+<h3><span class="header-section-number">1.4.5</span> Parameter estimates with emmeans.<a href="binreg.html#parameter-estimates-with-emmeans." class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>If we are interested in the estimated mean probability of beetles dying given the mean dosage of carbon-disulfide, we can use the <code>emmeans()</code> function (Note: This is more interesting when we have multiple explanatory variables)</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="binreg.html#cb17-1" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="sc">~</span> dose, <span class="at">test =</span> <span class="st">&quot;F&quot;</span>)</span>
+<span id="cb17-2"><a href="binreg.html#cb17-2" aria-hidden="true" tabindex="-1"></a>m</span></code></pre></div>
+<pre><code>##  dose emmean    SE  df asymp.LCL asymp.UCL
+##  1.79  0.744 0.138 Inf     0.474      1.01
+## 
+## Results are given on the logit (not the response) scale. 
+## Confidence level used: 0.95</code></pre>
+<p>Here we see that given the mean dosage of carbon-disulfide we expect the beetles to die with a probability of 0.744.</p>
+</div>
+</div>
+<div id="example-2-multiple-variables-and-correct-model-fit" class="section level2 hasAnchor" number="1.5">
+<h2><span class="header-section-number">1.5</span> Example 2: Multiple variables and correct model fit<a href="binreg.html#example-2-multiple-variables-and-correct-model-fit" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Now we take a look at another data example containing multiple explanatory variables and a good model fit. The dataset contains characteristics of Pima Indian women who was tested for diabetes.</p>
+<div id="organizing-data-1" class="section level3 hasAnchor" number="1.5.1">
+<h3><span class="header-section-number">1.5.1</span> Organizing data<a href="binreg.html#organizing-data-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We first load the data</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="binreg.html#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(PimaIndiansDiabetes2)</span>
+<span id="cb19-2"><a href="binreg.html#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="binreg.html#cb19-3" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(PimaIndiansDiabetes2)</span>
+<span id="cb19-4"><a href="binreg.html#cb19-4" aria-hidden="true" tabindex="-1"></a>newdata<span class="sc">$</span>age <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(<span class="fu">ifelse</span>(newdata<span class="sc">$</span>age<span class="sc">&lt;=</span><span class="dv">30</span>,<span class="st">&quot;20-30&quot;</span>,<span class="fu">ifelse</span>(newdata<span class="sc">$</span>age<span class="sc">&lt;=</span><span class="dv">40</span>,<span class="st">&quot;31-40&quot;</span>,<span class="fu">ifelse</span>(newdata<span class="sc">$</span>age<span class="sc">&lt;=</span><span class="dv">50</span>,<span class="st">&quot;41-50&quot;</span>,<span class="st">&quot;50+&quot;</span>))))</span>
+<span id="cb19-5"><a href="binreg.html#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="binreg.html#cb19-6" aria-hidden="true" tabindex="-1"></a>newdata <span class="ot">&lt;-</span> newdata[,<span class="fu">c</span>(<span class="st">&quot;diabetes&quot;</span>,<span class="st">&quot;glucose&quot;</span>,<span class="st">&quot;pressure&quot;</span>,<span class="st">&quot;triceps&quot;</span>,<span class="st">&quot;insulin&quot;</span>,<span class="st">&quot;mass&quot;</span>,<span class="st">&quot;pedigree&quot;</span>,<span class="st">&quot;age&quot;</span>)]</span></code></pre></div>
+<p>Now we make a variable table, to get an overview of the data:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="binreg.html#cb20-1" aria-hidden="true" tabindex="-1"></a>Description <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Diabetic (test for diabetes)&quot;</span>,<span class="st">&quot;Plasma glucose concentration (glucose tolerance test)&quot;</span>, <span class="st">&quot;Diastolic blood pressure (mm Hg)&quot;</span>,<span class="st">&quot;Triceps skin fold thickness (mm)&quot;</span>,<span class="st">&quot;2-Hour serum insulin (mu U/ml)&quot;</span>,<span class="st">&quot;Body mass index&quot;</span>,<span class="st">&quot;Diabetes pedigree function&quot;</span>,<span class="st">&quot;Age sorted into buckets&quot;</span>)</span>
+<span id="cb20-2"><a href="binreg.html#cb20-2" aria-hidden="true" tabindex="-1"></a>Use <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Response variable&quot;</span>, <span class="st">&quot;Explanatory variable&quot;</span>, <span class="st">&quot;Explanatory variable&quot;</span>, <span class="st">&quot;Explanatory variable&quot;</span>,<span class="st">&quot;Explanatory variable&quot;</span>, <span class="st">&quot;Explanatory variable&quot;</span>, <span class="st">&quot;Explanatory variable&quot;</span>, <span class="st">&quot;Explanatory variable&quot;</span>)</span>
+<span id="cb20-3"><a href="binreg.html#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cbind</span>(<span class="fu">vt</span>(newdata, <span class="at">out =</span> <span class="st">&quot;return&quot;</span>),<span class="fu">data.frame</span>(Description,Use))</span></code></pre></div>
+<pre><code>##       Name   Class                        Values                                           Description                  Use
+## 1 diabetes  factor                   &#39;neg&#39; &#39;pos&#39;                          Diabetic (test for diabetes)    Response variable
+## 2  glucose numeric                Num: 56 to 198 Plasma glucose concentration (glucose tolerance test) Explanatory variable
+## 3 pressure numeric                Num: 24 to 110                      Diastolic blood pressure (mm Hg) Explanatory variable
+## 4  triceps numeric                  Num: 7 to 63                      Triceps skin fold thickness (mm) Explanatory variable
+## 5  insulin numeric                Num: 14 to 846                        2-Hour serum insulin (mu U/ml) Explanatory variable
+## 6     mass numeric             Num: 18.2 to 67.1                                       Body mass index Explanatory variable
+## 7 pedigree numeric            Num: 0.085 to 2.42                            Diabetes pedigree function Explanatory variable
+## 8      age  factor &#39;20-30&#39; &#39;31-40&#39; &#39;41-50&#39; &#39;50+&#39;                               Age sorted into buckets Explanatory variable</code></pre>
+<p>Boxplot for each continuous variable to see a potential effect of each explanatory variable on the response variable.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="binreg.html#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">3</span>,<span class="dv">2</span>))</span>
+<span id="cb22-2"><a href="binreg.html#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(glucose<span class="sc">~</span>diabetes, <span class="at">ylab=</span><span class="st">&quot;Glucose&quot;</span>, <span class="at">xlab=</span> <span class="st">&quot;Diabetes&quot;</span>, <span class="at">col=</span><span class="st">&quot;light blue&quot;</span>,<span class="at">data =</span> newdata)</span>
+<span id="cb22-3"><a href="binreg.html#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(pressure<span class="sc">~</span>diabetes, <span class="at">ylab=</span><span class="st">&quot;Pressure&quot;</span>, <span class="at">xlab=</span> <span class="st">&quot;Diabetes&quot;</span>, <span class="at">col=</span><span class="st">&quot;light blue&quot;</span>,<span class="at">data =</span> newdata)</span>
+<span id="cb22-4"><a href="binreg.html#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(triceps<span class="sc">~</span>diabetes, <span class="at">ylab=</span><span class="st">&quot;triceps&quot;</span>, <span class="at">xlab=</span> <span class="st">&quot;Diabetes&quot;</span>, <span class="at">col=</span><span class="st">&quot;light blue&quot;</span>,<span class="at">data =</span> newdata)</span>
+<span id="cb22-5"><a href="binreg.html#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(insulin<span class="sc">~</span>diabetes, <span class="at">ylab=</span><span class="st">&quot;Insulin&quot;</span>, <span class="at">xlab=</span> <span class="st">&quot;Diabetes&quot;</span>, <span class="at">col=</span><span class="st">&quot;light blue&quot;</span>,<span class="at">data =</span> newdata)</span>
+<span id="cb22-6"><a href="binreg.html#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(mass<span class="sc">~</span>diabetes, <span class="at">ylab=</span><span class="st">&quot;Mass&quot;</span>, <span class="at">xlab=</span> <span class="st">&quot;Diabetes&quot;</span>, <span class="at">col=</span><span class="st">&quot;light blue&quot;</span>,<span class="at">data =</span> newdata)</span>
+<span id="cb22-7"><a href="binreg.html#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(pedigree<span class="sc">~</span>diabetes, <span class="at">ylab=</span><span class="st">&quot;Pedigree&quot;</span>, <span class="at">xlab=</span> <span class="st">&quot;Diabetes&quot;</span>, <span class="at">col=</span><span class="st">&quot;light blue&quot;</span>,<span class="at">data =</span> newdata)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/b14-1.png" width="672" /></p>
+<p>Number of diabetics and non-diabetics in each age group</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="binreg.html#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">xtabs</span>(<span class="sc">~</span>diabetes <span class="sc">+</span> age, <span class="at">data =</span> newdata)</span></code></pre></div>
+<pre><code>##         age
+## diabetes 20-30 31-40 41-50 50+
+##      neg   197    39    18   8
+##      pos    51    35    24  20</code></pre>
+</div>
+<div id="fitting-model-1" class="section level3 hasAnchor" number="1.5.2">
+<h3><span class="header-section-number">1.5.2</span> Fitting Model<a href="binreg.html#fitting-model-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Now we fit the model using all the explanatory variables.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="binreg.html#cb25-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(diabetes<span class="sc">~</span>., <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link=</span><span class="st">&quot;logit&quot;</span>),<span class="at">data =</span> newdata)</span>
+<span id="cb25-2"><a href="binreg.html#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="binreg.html#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m2)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = diabetes ~ ., family = binomial(link = &quot;logit&quot;), 
+##     data = newdata)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.8441  -0.6426  -0.3532   0.6234   2.6374  
+## 
+## Coefficients:
+##               Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -8.9635885  1.1684253  -7.672 1.70e-14 ***
+## glucose      0.0392724  0.0058950   6.662 2.70e-11 ***
+## pressure    -0.0033196  0.0119070  -0.279   0.7804    
+## triceps      0.0135295  0.0173730   0.779   0.4361    
+## insulin     -0.0008253  0.0013453  -0.613   0.5396    
+## mass         0.0645484  0.0272131   2.372   0.0177 *  
+## pedigree     1.0418192  0.4340281   2.400   0.0164 *  
+## age31-40     0.7771402  0.3435619   2.262   0.0237 *  
+## age41-50     1.6377941  0.4134147   3.962 7.44e-05 ***
+## age50+       1.3721989  0.5508856   2.491   0.0127 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 498.10  on 391  degrees of freedom
+## Residual deviance: 340.36  on 382  degrees of freedom
+## AIC: 360.36
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<p>For every one unit increase in <code>glucose</code>, the log odds of being diabetic ‘pos’(versus being diabetic ‘neg’) increases by 0.039.
+Similarly, for one unit increase in <code>pressure</code>, the log odds of being diabetic ‘pos’(versus being diabetic ‘neg’) decreases by 0.0045.</p>
+</div>
+<div id="model-validering-via-gof-pakken.-gerne-via-kkholst-på-github.-1" class="section level3 hasAnchor" number="1.5.3">
+<h3><span class="header-section-number">1.5.3</span> Model validering via gof-pakken. Gerne via kkholst på github.<a href="binreg.html#model-validering-via-gof-pakken.-gerne-via-kkholst-på-github.-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>The binary logistic regression model only holds if the following assumptions hold:</p>
+<ul>
+<li>The explanatory variables are independent</li>
+<li>The observations are independent</li>
+<li>The explanatory variables are linearly related to the log odds of the dependent variable</li>
+</ul>
+<p>To get an idea if the explanatory variables are independent we calculate the Spearman correlation matrix</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="binreg.html#cb27-1" aria-hidden="true" tabindex="-1"></a>cp <span class="ot">&lt;-</span> <span class="fu">cor</span>(<span class="fu">data.matrix</span>(newdata[,<span class="sc">-</span><span class="dv">1</span>]), <span class="at">method =</span> <span class="st">&quot;spearman&quot;</span>)</span>
+<span id="cb27-2"><a href="binreg.html#cb27-2" aria-hidden="true" tabindex="-1"></a>ord <span class="ot">&lt;-</span> <span class="fu">rev</span>(<span class="fu">hclust</span>(<span class="fu">as.dist</span>(<span class="dv">1</span><span class="sc">-</span><span class="fu">abs</span>(cp)))<span class="sc">$</span>order)</span>
+<span id="cb27-3"><a href="binreg.html#cb27-3" aria-hidden="true" tabindex="-1"></a>colPal <span class="ot">&lt;-</span> <span class="fu">colorRampPalette</span>(<span class="fu">c</span>(<span class="st">&quot;blue&quot;</span>, <span class="st">&quot;yellow&quot;</span>), <span class="at">space =</span> <span class="st">&quot;rgb&quot;</span>)(<span class="dv">100</span>)</span>
+<span id="cb27-4"><a href="binreg.html#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="binreg.html#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">levelplot</span>(cp[ord, ord],</span>
+<span id="cb27-6"><a href="binreg.html#cb27-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb27-7"><a href="binreg.html#cb27-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">ylab =</span> <span class="st">&quot;&quot;</span>,</span>
+<span id="cb27-8"><a href="binreg.html#cb27-8" aria-hidden="true" tabindex="-1"></a>          <span class="at">col.regions =</span> colPal,</span>
+<span id="cb27-9"><a href="binreg.html#cb27-9" aria-hidden="true" tabindex="-1"></a>          <span class="at">at =</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>, <span class="at">length.out =</span> <span class="dv">100</span>),</span>
+<span id="cb27-10"><a href="binreg.html#cb27-10" aria-hidden="true" tabindex="-1"></a>          <span class="at">colorkey =</span> <span class="fu">list</span>(<span class="at">space =</span> <span class="st">&quot;top&quot;</span>, <span class="at">labels =</span> <span class="fu">list</span>(<span class="at">cex =</span> <span class="fl">1.5</span>)),</span>
+<span id="cb27-11"><a href="binreg.html#cb27-11" aria-hidden="true" tabindex="-1"></a>          <span class="at">scales =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="fu">list</span>(<span class="at">rot=</span> <span class="dv">45</span>),</span>
+<span id="cb27-12"><a href="binreg.html#cb27-12" aria-hidden="true" tabindex="-1"></a>                        <span class="at">y =</span> <span class="fu">list</span>(<span class="at">draw =</span> <span class="cn">FALSE</span>),</span>
+<span id="cb27-13"><a href="binreg.html#cb27-13" aria-hidden="true" tabindex="-1"></a>                        <span class="at">cex =</span> <span class="fl">1.2</span>)</span>
+<span id="cb27-14"><a href="binreg.html#cb27-14" aria-hidden="true" tabindex="-1"></a>          )</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/b17-1.png" width="672" /></p>
+<p>Here we see that <code>insulin</code> and <code>glucose</code> as well as <code>mass</code> and <code>triceps</code> are heavily correlated, and we could think about removing some of them. This will however not be done here</p>
+<p>To check assumption 2, we again make a residual plot:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="binreg.html#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(m2, <span class="dv">1</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/b18-1.png" width="672" /></p>
+<p>Here we can see that the residuals clearly have a pattern, and we can see that there are a couple of outliers, but it is hard to say anything about whether or not the observations are independent.</p>
+<p>To check this we again simulate the cumulative sum of the residual process:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="binreg.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">cumres</span>(m2))</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/b19-1.png" width="672" /><img src="bookdownproj_files/figure-html/b19-2.png" width="672" /><img src="bookdownproj_files/figure-html/b19-3.png" width="672" /><img src="bookdownproj_files/figure-html/b19-4.png" width="672" /><img src="bookdownproj_files/figure-html/b19-5.png" width="672" /><img src="bookdownproj_files/figure-html/b19-6.png" width="672" /><img src="bookdownproj_files/figure-html/b19-7.png" width="672" /></p>
+<p>Here the null-hypothesis is that the model is correct, which means that the test suggests that the model is correct as the p-value is 0.596-0.68. Looking at the p-values for the individual variables it also looks really good except for <code>mass</code> and <code>insulin</code>.</p>
+</div>
+<div id="hypothesis-test-1" class="section level3 hasAnchor" number="1.5.4">
+<h3><span class="header-section-number">1.5.4</span> Hypothesis test<a href="binreg.html#hypothesis-test-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>To do an hypothesis for the binary logistic regression, we use the function <code>drop1()</code> on our fitted model:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="binreg.html#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">drop1</span>(m2, <span class="at">test=</span><span class="st">&quot;Chisq&quot;</span>)</span></code></pre></div>
+<pre><code>## Single term deletions
+## 
+## Model:
+## diabetes ~ glucose + pressure + triceps + insulin + mass + pedigree + 
+##     age
+##          Df Deviance    AIC    LRT  Pr(&gt;Chi)    
+## &lt;none&gt;        340.36 360.36                     
+## glucose   1   394.42 412.42 54.062 1.942e-13 ***
+## pressure  1   340.43 358.43  0.078 0.7806971    
+## triceps   1   340.96 358.96  0.605 0.4365108    
+## insulin   1   340.73 358.73  0.374 0.5405949    
+## mass      1   346.11 364.11  5.755 0.0164406 *  
+## pedigree  1   346.43 364.43  6.071 0.0137413 *  
+## age       3   360.41 374.41 20.050 0.0001657 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p>Here we see that <code>glucose</code>, <code>mass</code>, <code>pedigree</code> and <code>age</code> are statistical significant, while <code>pressure</code>, <code>triceps</code> and <code>insulin</code> are not.</p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="linear-regression.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/HjalteSoeberg/DataLab_StudCons/edit/main/binaryreg.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/HjalteSoeberg/DataLab_StudCons/blob/main/binaryreg.Rmd",
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

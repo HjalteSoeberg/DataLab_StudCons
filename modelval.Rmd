@@ -293,7 +293,7 @@ plot(model,2)
 ```
 
 
-## Diverse/outlook
+## Miscellaneous
 
 ### Intepretation of results when transforming
 
@@ -303,6 +303,7 @@ In the Pillbug example we log transformed our data:
 ```{r z30}
 lm(log(time)~group, data=pillbug)
 ```
+
 Here the mean log(time) of the control group is 4.99 and the mean difference between control and Light is -2.0. This means the ratio of means of the original populations is estimated to be exp(-2.0)≈0.135, i.e. the mean time for group=Light is about 0.135 times smaller than the control group.
 
 
@@ -313,14 +314,6 @@ When the data is in need for a transformation it can be hard to know which trans
 
 
 For an example of using Boxcox see "Data Example 4: pillbugs" in this document.
-
-
-
-* Det kan være svært at vurdere plots; kan evt. sammenligne med simulerede data?
-
-* Man laver lignende i lineære mixed models
-
-* Vanskeligere at lave modelkontrol i modeller der ikke er baseret på normalfordelingen. Kan evt. nævne kumulerede residualer
 
 ### Shapiro Wilk hypothesis test for normality
 
@@ -358,6 +351,5 @@ qqline(unifdata, col = "red", lwd = 1, lty = 2)
 The tails of this QQ-plot are very far off from the dotted line, which in combination with the few data points, would make us hesitant to call this data normally distributed. Not to say that this QQ-plot couldn't be from a normal distribution, but just that we can't for sure conclude that it is/isn't normally distributed, which we might do only based on the p-value from the Shapiro Wilk test. To summaries the this example: From the Shapiro Wilk test we could be tempted to conclude that the data is normally distributed, but then looking at QQ-plot of the data we would be more hesistant to make that conlcusion.
 
 
-### Alternative to transformation: Model for the varinces with the gls-function
 
 
